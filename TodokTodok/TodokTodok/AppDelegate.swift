@@ -20,11 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //firebase 연결
         FirebaseApp.configure()
         
-        Firestore.firestore().collection("book").document("name").setData(["name": "bookbook"])
+        //firebase에 저장
+        Firestore.firestore().collection("book").document("name").setData(["name": "bookName"])
         
+        //storage에 이미지 저장
         let image = UIImage(named: "papa")!
         let imageData = image.jpegData(compressionQuality: 1.0)
-        let reference = Storage.storage().reference().child("mybook").child("papa")
+        let reference = Storage.storage().reference().child("mybook_test").child("papa")
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
         reference.putData(imageData!, metadata: metaData) { _ in }

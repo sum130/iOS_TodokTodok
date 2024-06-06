@@ -17,6 +17,7 @@
 		8D4D0D492C11773800A2269E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4D0D482C11773800A2269E /* HomeViewController.swift */; };
 		8D4D0D4B2C117E4100A2269E /* BookSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */; };
 		8D4D0D4D2C118FEB00A2269E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D4D0D4C2C118FEB00A2269E /* GoogleService-Info.plist */; };
+		8D4D0D552C11A02A00A2269E /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4D0D542C11A02A00A2269E /* Database.swift */; };
 		8DDD0F5C2BFCC49300E2E472 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD0F5B2BFCC49300E2E472 /* AppDelegate.swift */; };
 		8DDD0F5E2BFCC49300E2E472 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD0F5D2BFCC49300E2E472 /* SceneDelegate.swift */; };
 		8DDD0F602BFCC49300E2E472 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD0F5F2BFCC49300E2E472 /* ViewController.swift */; };
@@ -29,6 +30,7 @@
 		8D4D0D482C11773800A2269E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewController.swift; sourceTree = "<group>"; };
 		8D4D0D4C2C118FEB00A2269E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8D4D0D542C11A02A00A2269E /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		8DDD0F582BFCC49300E2E472 /* TodokTodok.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodokTodok.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DDD0F5B2BFCC49300E2E472 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8DDD0F5D2BFCC49300E2E472 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 		8DDD0F4F2BFCC49300E2E472 = {
 			isa = PBXGroup;
 			children = (
+				8D4D0D542C11A02A00A2269E /* Database.swift */,
 				8DDD0F5A2BFCC49300E2E472 /* TodokTodok */,
 				8DDD0F592BFCC49300E2E472 /* Products */,
 				8D3B107C2C04E3ED00A52D03 /* Frameworks */,
@@ -182,6 +185,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D4D0D552C11A02A00A2269E /* Database.swift in Sources */,
 				8DDD0F602BFCC49300E2E472 /* ViewController.swift in Sources */,
 				8DDD0F5C2BFCC49300E2E472 /* AppDelegate.swift in Sources */,
 				8D4D0D4B2C117E4100A2269E /* BookSearchViewController.swift in Sources */,

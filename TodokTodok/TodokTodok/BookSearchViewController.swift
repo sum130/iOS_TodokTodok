@@ -9,6 +9,9 @@ import UIKit
 
 class BookSearchViewController: UIViewController{
     
+    let bookSite = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 address
+    
+    
     
     @IBOutlet weak var bookTableView: UITableView!
     var searchText: String?
@@ -37,12 +40,12 @@ class BookSearchViewController: UIViewController{
     
 }
 extension BookSearchViewController: UITableViewDelegate{
-    
-    // 특정 row를 클릭하면 이 함수가 호출된다
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
-        resultLabel.text = "   \(indexPath.row)th row was selected"
-    }
+
+    // 특정 row를 클릭하면 이 함수가 호출된다
+    func tableView(_ tableView: UITableView, didSelectRowAt
+                   indexPath: IndexPath) {
+        resultLabel.text = "   \(indexPath.row)th row was selected"
+    }
 }
 
 extension BookSearchViewController: UITableViewDataSource{
@@ -56,20 +59,6 @@ extension BookSearchViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
-//        let (r,g,b) = (CGFloat.random(in: 0...1), CGFloat.random(in: 0...1), CGFloat.random(in: 0...1))
-//        let cell = UITableViewCell()
-//        
-//        cell.contentView.backgroundColor = UIColor(red: r , green: g, blue: b, alpha: 1.0)
-        
-        
-    
-//
-//        cell.imageView?.image = papaImage
-//        cell.textLabel?.text = "BookName"
-//        cell.detailTextLabel?.text = "WriterName"
-//        cell.textLabel?.textAlignment = .right
-
-        
         let cell = UITableViewCell()
         let nameLabel = UILabel()
         nameLabel.numberOfLines = 0
@@ -80,7 +69,6 @@ extension BookSearchViewController: UITableViewDataSource{
         var outer = UIStackView(arrangedSubviews: [imageView,nameLabel])
         outer.spacing = 10
         
-        cell.contentView.backgroundColor = .blue
         cell.contentView.addSubview(outer)
         outer.translatesAutoresizingMaskIntoConstraints = false
         
@@ -89,12 +77,27 @@ extension BookSearchViewController: UITableViewDataSource{
                     outer.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 1),
                     outer.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                    imageView.widthAnchor.constraint(equalTo: nameLabel.widthAnchor, multiplier: 2)
+                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5)
                 ])
         
         return cell
     }
-    
-    
-    
+}
+
+extension BookSearchViewController{
+    func getBookInfo(bookName: String){
+
+        var urlStr = bookSite
+        urlStr += "?"+"ttbkey=["+String(bookName)+"]"
+        
+        let request = URLRequest(url: URL(string: urlStr)!) // 디폴트가 GET방식이다
+        let session = URLSession(configuration: .default)
+        let dataTask = session.dataTask(with: request){ (data, response, error) in
+            guard let jsonData = data else{ print(error!); return }
+            if let jsonStr = String(data:jsonData, encoding: .utf8){
+                print(jsonStr)
+            }
+        }
+        dataTask.resume()
+    }
 }
