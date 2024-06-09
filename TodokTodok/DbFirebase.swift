@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 class DbFirebase: Database{
     // 데이터를 저장할 위치 설정
-    var reference: CollectionReference = Firestore.firestore().collection("cities")
+    var reference: CollectionReference = Firestore.firestore().collection("books")
 
     // 데이터의 변화가 생기면 알려쥐 위한 클로즈
 
@@ -30,7 +30,7 @@ class DbFirebase: Database{
         }
         //새로운 쿼리를 설정한다. 원하는 필드, 원하는 데이터를 적절히 설정하면 된다.
 
-        let query = reference.whereField("library", isGreaterThanOrEqualTo : 0).whereField("bookName", isLessThanOrEqualTo: 10000)
+        let query = reference.whereField("id", isGreaterThanOrEqualTo : 0).whereField("id", isLessThanOrEqualTo: 10000)
         existQuery = query.addSnapshotListener(onChangingData)
     }
 
@@ -69,7 +69,7 @@ extension DbFirebase{
     func uploadImage(imageName: String, image: UIImage, completion: @escaping () -> Void){
         guard let imageData = image.jpegData(compressionQuality: 1.0) else {return}
         
-        let reference = Storage.storage().reference().child("cities").child(imageName)
+        let reference = Storage.storage().reference().child("books").child(imageName)
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
         reference.putData(imageData, metadata: metaData, completion: { data, error in

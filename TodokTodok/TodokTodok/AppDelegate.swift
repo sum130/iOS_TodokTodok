@@ -21,12 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         //firebase에 저장
-        Firestore.firestore().collection("book").document("name").setData(["name": "bookName"])
+        //Firestore.firestore().collection("books").document("id").setData(["id": 1,"name":"name","writer":"writer", "description":"hi","imageName":"papa"])
         
         //storage에 이미지 저장
         let image = UIImage(named: "papa")!
         let imageData = image.jpegData(compressionQuality: 1.0)
-        let reference = Storage.storage().reference().child("library").child("papa")
+        let reference = Storage.storage().reference().child("library").child("pipi")
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
         reference.putData(imageData!, metadata: metaData) { _ in }
