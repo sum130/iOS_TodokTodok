@@ -9,8 +9,8 @@ import UIKit
 
 class BookSearchViewController: UIViewController{
     
-    let bookSite = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 address
-    
+    let bookSite = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 요철 URLaddress
+    let TTBKey = "ttbsm39041712001"//ttbkey
     
     
     @IBOutlet weak var bookTableView: UITableView!
@@ -31,6 +31,8 @@ class BookSearchViewController: UIViewController{
         if let text = searchText {
             resultLabel.text = text
         }
+        
+        getBookInfo(bookName: resultLabel.text ?? "없음")
         
     
        
@@ -84,20 +86,31 @@ extension BookSearchViewController: UITableViewDataSource{
     }
 }
 
+
+
+
+
+////요청 URL샘플 : http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=[TTBKey]&Query=aladdin&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&output=xml&Version=20070901
+
+//let bookSite = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 요철 URLaddress
+
 extension BookSearchViewController{
     func getBookInfo(bookName: String){
-
         var urlStr = bookSite
-        urlStr += "?"+"ttbkey=["+String(bookName)+"]"
-        
-        let request = URLRequest(url: URL(string: urlStr)!) // 디폴트가 GET방식이다
-        let session = URLSession(configuration: .default)
-        let dataTask = session.dataTask(with: request){ (data, response, error) in
-            guard let jsonData = data else{ print(error!); return }
-            if let jsonStr = String(data:jsonData, encoding: .utf8){
-                print(jsonStr)
-            }
-        }
-        dataTask.resume()
-    }
+        urlStr += "?"+"ttbkey=[\(TTBKey)]"
+        urlStr += "&"+"Query="
+        let Query = bookName
+        let QueryText = "&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&xml&Version=20131101"//20131101
+        urlStr += Query
+        urlStr += QueryText
+        let request = URLRequest(url: URL(string: urlStr)!) // 디폴트가 GET방식이다
+        let session = URLSession(configuration: .default)
+        let dataTask = session.dataTask(with: request){ (data, response, error) in
+            guard let jsonData = data else{ print(error!); return }
+            if let jsonStr = String(data:jsonData, encoding: .utf8){
+                print(jsonStr)
+            }
+        }
+        dataTask.resume()
+    }
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D0E7E9C2C1597DE006E44C5 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0E7E9B2C1597DE006E44C5 /* LibraryViewController.swift */; };
+		8D0E7E9E2C159D80006E44C5 /* DBFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0E7E9D2C159D80006E44C5 /* DBFirebase.swift */; };
 		8D3B10452C04E36400A52D03 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8D3B10442C04E36400A52D03 /* FirebaseAnalytics */; };
 		8D3B10472C04E36400A52D03 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 8D3B10462C04E36400A52D03 /* FirebaseAnalyticsOnDeviceConversion */; };
 		8D3B10492C04E36400A52D03 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8D3B10482C04E36400A52D03 /* FirebaseAnalyticsSwift */; };
@@ -27,6 +29,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8D0E7E9B2C1597DE006E44C5 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		8D0E7E9D2C159D80006E44C5 /* DBFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFirebase.swift; sourceTree = "<group>"; };
 		8D4D0D482C11773800A2269E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewController.swift; sourceTree = "<group>"; };
 		8D4D0D4C2C118FEB00A2269E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -69,6 +73,7 @@
 		8DDD0F4F2BFCC49300E2E472 = {
 			isa = PBXGroup;
 			children = (
+				8D0E7E9D2C159D80006E44C5 /* DBFirebase.swift */,
 				8D4D0D542C11A02A00A2269E /* Database.swift */,
 				8DDD0F5A2BFCC49300E2E472 /* TodokTodok */,
 				8DDD0F592BFCC49300E2E472 /* Products */,
@@ -97,6 +102,7 @@
 				8DDD0F692BFCC49400E2E472 /* Info.plist */,
 				8D4D0D482C11773800A2269E /* HomeViewController.swift */,
 				8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */,
+				8D0E7E9B2C1597DE006E44C5 /* LibraryViewController.swift */,
 			);
 			path = TodokTodok;
 			sourceTree = "<group>";
@@ -187,8 +193,10 @@
 			files = (
 				8D4D0D552C11A02A00A2269E /* Database.swift in Sources */,
 				8DDD0F602BFCC49300E2E472 /* ViewController.swift in Sources */,
+				8D0E7E9E2C159D80006E44C5 /* DBFirebase.swift in Sources */,
 				8DDD0F5C2BFCC49300E2E472 /* AppDelegate.swift in Sources */,
 				8D4D0D4B2C117E4100A2269E /* BookSearchViewController.swift in Sources */,
+				8D0E7E9C2C1597DE006E44C5 /* LibraryViewController.swift in Sources */,
 				8DDD0F5E2BFCC49300E2E472 /* SceneDelegate.swift in Sources */,
 				8D4D0D492C11773800A2269E /* HomeViewController.swift in Sources */,
 			);
