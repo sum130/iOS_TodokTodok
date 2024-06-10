@@ -90,25 +90,25 @@ extension BookSearchViewController: UITableViewDataSource{
 
 
 
-////요청 URL샘플 : http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=[TTBKey]&Query=aladdin&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&output=xml&Version=20070901
-
-//let bookSite = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 요철 URLaddress
+//let bookSite = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 요철 URLaddress
 
 extension BookSearchViewController{
     func getBookInfo(bookName: String){
         var urlStr = bookSite
-        urlStr += "?"+"ttbkey=[\(TTBKey)]"
+        urlStr += "?"+"ttbkey=\(TTBKey)"
         urlStr += "&"+"Query="
         let Query = bookName
-        let QueryText = "&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&xml&Version=20131101"//20131101
+        let QueryText = "&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&js&Version=20131101"
         urlStr += Query
         urlStr += QueryText
+        //urlStr = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbsm39041712001 &Query=aladdin&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&output=xml&Version=20070901"
+        //print(urlStr)
         let request = URLRequest(url: URL(string: urlStr)!) // 디폴트가 GET방식이다
         let session = URLSession(configuration: .default)
         let dataTask = session.dataTask(with: request){ (data, response, error) in
             guard let jsonData = data else{ print(error!); return }
             if let jsonStr = String(data:jsonData, encoding: .utf8){
-                print(jsonStr)
+                print("!!!!\n"+jsonStr)
             }
         }
         dataTask.resume()
