@@ -23,6 +23,7 @@ class BookSearchViewController: UIViewController{
     var currentBook: Book?
     var foundCharacters: String = ""
     
+    
     let papaImage = UIImage(named: "papa")
     
     override func viewDidLoad() {
@@ -143,39 +144,11 @@ extension BookSearchViewController{
 
 extension BookSearchViewController: XMLParserDelegate{
     
-//    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-//        // XML 파싱 시 필요한 로직을 여기에 작성합니다.
-//        // 예시: 특정 태그를 만났을 때 동작
-//        
-//        
-//        if elementName == "item" {
-//            currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "")
-//            // item 태그 내의 속성들을 확인하여 책 객체의 속성으로 설정.
-//            if let itemId = attributeDict["itemId"], let id = Int(itemId) {
-//                print("출력?!"+itemId + "   !!!")
-//                currentBook?.id = id
-//            }
-//        }
-//        else if elementName == "title" || elementName == "author" || elementName == "description" || elementName == "cover" {
-//                    foundCharacters = ""
-//                }
-////        if elementName == "title" {
-////            currentBook?.name = "수미나"
-////        }
-////        if elementName == "author" {
-////            currentBook?.writer = "itemauthor"
-////        }
-////        if elementName == "description" {
-////            currentBook?.description = "itemdescription"
-////        }
-////        if elementName == "cover" {
-////            currentBook?.imageName = "img"
-////        }
-//    }
-    
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+        
             if elementName == "item" {
+                self.currentBook = nil
                 currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "")
                 if let itemId = attributeDict["itemId"], let id = Int(itemId) {
                     currentBook?.id = id
@@ -193,28 +166,34 @@ extension BookSearchViewController: XMLParserDelegate{
             foundCharacters += string
         }
         
-        
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-            guard var currentBook = currentBook else { return }
-            
             switch elementName {
             case "title":
-                //print("title -> \(foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines))")
-                currentBook.name = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print("title -> \(foundCharacters)") // 디버깅을 위해 추가
+                currentBook?.name = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print(currentBook)
             case "author":
-                currentBook.writer = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print("author -> \(foundCharacters)")
+                currentBook?.writer = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print(currentBook)
             case "description":
-                currentBook.description = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print("description -> \(foundCharacters)")
+                currentBook?.description = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print(currentBook)
             case "cover":
-                currentBook.imageName = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
-                
-//            case "/item":
-//                
+                print("cover -> \(foundCharacters)")
+                currentBook?.imageName = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                print(currentBook)
+            case "item":
+                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: ""))
+                    self.currentBook = nil
             default:
                 break
             }
-        books.append(currentBook)
-        self.currentBook = nil
+
+////
+//                books.append(currentBook)
+//                self.currentBook = nil
                 currentElement = nil
                 foundCharacters = ""
         }
