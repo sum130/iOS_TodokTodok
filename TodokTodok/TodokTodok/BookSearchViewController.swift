@@ -17,8 +17,11 @@ class BookSearchViewController: UIViewController{
     var searchText: String?
     @IBOutlet weak var resultLabel: UILabel!
     
-  
-    
+   
+    var books: [Book] = []
+    var currentElement: String?
+    var currentBook: Book?
+    var foundCharacters: String = ""
     
     let papaImage = UIImage(named: "papa")
     
@@ -33,16 +36,12 @@ class BookSearchViewController: UIViewController{
         }
         
         getBookInfo(bookName: resultLabel.text ?? "없음")
-        
-    
-       
-        
     }
-    
-    
 }
-extension BookSearchViewController: UITableViewDelegate{
 
+
+
+extension BookSearchViewController: UITableViewDelegate{
     // 특정 row를 클릭하면 이 함수가 호출된다
     func tableView(_ tableView: UITableView, didSelectRowAt
                    indexPath: IndexPath) {
@@ -50,24 +49,29 @@ extension BookSearchViewController: UITableViewDelegate{
     }
 }
 
+
+
 extension BookSearchViewController: UITableViewDataSource{
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return books.count
     }
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
         let cell = UITableViewCell()
+        
+        let book = books[indexPath.row]
+        
         let nameLabel = UILabel()
         nameLabel.numberOfLines = 0
-        nameLabel.text = "hiroo"
+        nameLabel.text = book.name
         nameLabel.textColor = .gray
         nameLabel.backgroundColor = .black
-        let imageView = UIImageView(image: papaImage)
+        let imageView = UIImageView(image: papaImage) //UIImageView(image: book.uiImage())
         var outer = UIStackView(arrangedSubviews: [imageView,nameLabel])
         outer.spacing = 10
         
@@ -93,6 +97,7 @@ extension BookSearchViewController: UITableViewDataSource{
 //let bookSite = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx"//도서검색 요철 URLaddress
 
 extension BookSearchViewController{
+    
     func getBookInfo(bookName: String){
         var urlStr = bookSite
         urlStr += "?"+"ttbkey=\(TTBKey)"
@@ -103,14 +108,155 @@ extension BookSearchViewController{
         urlStr += QueryText
         //urlStr = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbsm39041712001 &Query=aladdin&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&output=xml&Version=20070901"
         //print(urlStr)
+        
+        
         let request = URLRequest(url: URL(string: urlStr)!) // 디폴트가 GET방식이다
         let session = URLSession(configuration: .default)
         let dataTask = session.dataTask(with: request){ (data, response, error) in
             guard let jsonData = data else{ print(error!); return }
-            if let jsonStr = String(data:jsonData, encoding: .utf8){
-                print("!!!!\n"+jsonStr)
+            
+//            if let jsonStr = String(data:jsonData, encoding: .utf8){
+//                print("!!!!\n"+jsonStr)
+//            }
+            
+            guard let xmlData = data else {
+                            print(error ?? "Unknown error")
+                            return
+                        }
+            let parser = XMLParser(data: xmlData)
+            parser.delegate = self
+            parser.parse()
+            
+            //let (infoStr, imageData) = self.makeUpBookInfo(jsonData: jsonData)
+            //print(infoStr)
+            
+            
+            DispatchQueue.main.async {
+                // 업데이트할 UI 코드 작성
             }
+            
         }
         dataTask.resume()
     }
 }
+
+
+extension BookSearchViewController: XMLParserDelegate{
+    
+//    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+//        // XML 파싱 시 필요한 로직을 여기에 작성합니다.
+//        // 예시: 특정 태그를 만났을 때 동작
+//        
+//        
+//        if elementName == "item" {
+//            currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "")
+//            // item 태그 내의 속성들을 확인하여 책 객체의 속성으로 설정.
+//            if let itemId = attributeDict["itemId"], let id = Int(itemId) {
+//                print("출력?!"+itemId + "   !!!")
+//                currentBook?.id = id
+//            }
+//        }
+//        else if elementName == "title" || elementName == "author" || elementName == "description" || elementName == "cover" {
+//                    foundCharacters = ""
+//                }
+////        if elementName == "title" {
+////            currentBook?.name = "수미나"
+////        }
+////        if elementName == "author" {
+////            currentBook?.writer = "itemauthor"
+////        }
+////        if elementName == "description" {
+////            currentBook?.description = "itemdescription"
+////        }
+////        if elementName == "cover" {
+////            currentBook?.imageName = "img"
+////        }
+//    }
+    
+    
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+            if elementName == "item" {
+                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "")
+                if let itemId = attributeDict["itemId"], let id = Int(itemId) {
+                    currentBook?.id = id
+                }
+            }
+        else if elementName == "title" || elementName == "author" || elementName == "description" || elementName == "cover" {
+                    currentElement = elementName
+                    foundCharacters = ""
+                }
+    }
+    
+    
+    
+        func parser(_ parser: XMLParser, foundCharacters string: String) {
+            foundCharacters += string
+        }
+        
+        
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+            guard var currentBook = currentBook else { return }
+            
+            switch elementName {
+            case "title":
+                //print("title -> \(foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines))")
+                currentBook.name = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+            case "author":
+                currentBook.writer = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+            case "description":
+                currentBook.description = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+            case "cover":
+                currentBook.imageName = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+//            case "/item":
+//                
+            default:
+                break
+            }
+        books.append(currentBook)
+        self.currentBook = nil
+                currentElement = nil
+                foundCharacters = ""
+        }
+    
+        func parserDidEndDocument(_ parser: XMLParser) {
+            DispatchQueue.main.async {
+                // JSON 출력
+                do {
+                    // Books 배열을 JSON으로 변환
+                    let jsonData = try JSONEncoder().encode(self.books)
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print("Parsed JSON: \(jsonString)")
+                    } else {
+                        print("Failed to convert JSON to string")
+                    }
+                } catch {
+                    print("Error encoding books array to JSON: \(error)")
+                }
+                self.bookTableView.reloadData()
+            }
+        }
+        func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+            print("XML Parsing Error: \(parseError)")
+        }
+        
+        //    func makeUpBookInfo(jsonData: Data) -> (String, Data) {
+        //
+        //        let jsonObjct = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+        //
+        //        let id = jsonObjct["itemID"] as! Double
+        //        let name = jsonObjct["bookName"] as! String
+        //        let writer = jsonObjct["writer"] as! String
+        //        let description = jsonObjct["descript"] as! String
+        //        let imageName = jsonObjct["imageName"] as! String
+        //
+        //        var infoStr = "제목: \(name), 작가: \(writer)\n\(description)"
+        //        let imageUrl = URL(string: "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=336137245&amp;partner=openAPI&amp;start=api")
+        //        //imageName)
+        //
+        //        let data = try! Data(contentsOf: imageUrl!)
+        //        return (infoStr, data)
+        //    }
+        
+        
+    }
