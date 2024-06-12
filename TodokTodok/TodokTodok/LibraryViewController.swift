@@ -100,7 +100,7 @@ class LibraryViewController: UIViewController{
         guard let dict = dict, let book = Book.fromDict(dict: dict) else {
                     print("Failed to parse book from dict: \(String(describing: dict))")
                     return
-                }
+        }
         
           if dbaction == .add{  // 단순히 배열에 더한다
             books.append(book)
@@ -155,8 +155,6 @@ extension LibraryViewController: UITableViewDelegate{
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 100//return CGFloat(books.count)
         }
-    
-    
 }
 
 extension LibraryViewController: UITableViewDataSource{
