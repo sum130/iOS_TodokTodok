@@ -224,13 +224,18 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="서재" image="books.vertical" catalog="system" id="QpX-sa-mtA"/>
                     <connections>
+                        <outlet property="completedBookBtn" destination="UZQ-ki-4VO" id="0L9-bu-FhB"/>
                         <outlet property="libraryTableView" destination="uVK-Nf-VjS" id="dNd-i8-Fkz"/>
                         <outlet property="nameLabel" destination="Lqw-xt-aFA" id="7XC-7j-mC4"/>
+                        <outlet property="readingBookBtn" destination="sat-QY-EN9" id="zE8-wj-iIH"/>
+                        <outlet property="totalBtn" destination="oQh-vR-33O" id="zE2-xf-msy"/>
+                        <outlet property="wannaBookBtn" destination="huZ-ny-R2a" id="Zji-Dr-am1"/>
+                        <segue destination="a5F-Xs-oJS" kind="show" identifier="GotoDetail" id="hqC-xf-vmf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mka-eF-ThA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="879" y="906"/>
+            <point key="canvasLocation" x="666" y="985"/>
         </scene>
         <!--기록-->
         <scene sceneID="HP7-Bw-wCF">
@@ -303,6 +308,66 @@
             </objects>
             <point key="canvasLocation" x="878.62595419847321" y="-20.422535211267608"/>
         </scene>
+        <!--Book Detail View Controller-->
+        <scene sceneID="9o2-LI-lZ3">
+            <objects>
+                <viewController id="a5F-Xs-oJS" customClass="BookDetailViewController" customModule="TodokTodok" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="83u-qY-zVA">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="naF-p9-jMp">
+                                <rect key="frame" x="10" y="50" width="373" height="782"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FSf-Bu-AKJ">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="20.333333333333332"/>
+                                        <color key="backgroundColor" red="0.9118407369" green="0.65068808639999998" blue="0.70571507249999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ydo-Mn-YJk">
+                                        <rect key="frame" x="0.0" y="30.333333333333314" width="373" height="751.66666666666674"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e8P-Fu-qmU">
+                                                <rect key="frame" x="0.0" y="0.0" width="373" height="319.66666666666669"/>
+                                            </imageView>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Fja-Rp-jDZ">
+                                                <rect key="frame" x="0.0" y="329.66666666666674" width="373" height="422"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                <color key="textColor" systemColor="labelColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="e8P-Fu-qmU" firstAttribute="height" secondItem="Fja-Rp-jDZ" secondAttribute="height" multiplier="0.757253" id="xSi-U0-NvQ"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="k6d-Vi-TDb"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="k6d-Vi-TDb" firstAttribute="trailing" secondItem="naF-p9-jMp" secondAttribute="trailing" constant="10" id="QdY-NK-44s"/>
+                            <constraint firstItem="naF-p9-jMp" firstAttribute="top" secondItem="k6d-Vi-TDb" secondAttribute="top" constant="50" id="U9K-j8-3ZJ"/>
+                            <constraint firstItem="naF-p9-jMp" firstAttribute="leading" secondItem="k6d-Vi-TDb" secondAttribute="leading" constant="10" id="WDu-qD-clq"/>
+                            <constraint firstItem="k6d-Vi-TDb" firstAttribute="bottom" secondItem="naF-p9-jMp" secondAttribute="bottom" constant="10" id="vN8-PG-XYc"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="RIs-6V-4V9"/>
+                    <connections>
+                        <outlet property="contentTextView" destination="Fja-Rp-jDZ" id="rrK-ut-7na"/>
+                        <outlet property="coverImageView" destination="e8P-Fu-qmU" id="qHF-xr-z5f"/>
+                        <outlet property="titleLabel" destination="FSf-Bu-AKJ" id="JiH-fC-WmA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XPc-Be-rNX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="665" y="1896"/>
+        </scene>
     </scenes>
     <resources>
         <image name="books.vertical" catalog="system" width="128" height="107"/>
@@ -310,6 +375,9 @@
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="papa" width="78" height="80"/>
         <image name="pencil" catalog="system" width="128" height="113"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

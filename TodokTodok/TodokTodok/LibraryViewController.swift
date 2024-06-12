@@ -11,14 +11,20 @@ class LibraryViewController: UIViewController{
     
     
     var books: [Book] = TodokTodok.load("bookData.json")
+    var filteredBooks: [Book] = []  // 필터링된 책 배열
     var imagePool: [String: UIImage] = [:]
     
     var dbFirebase : DbFirebase?
     var selected : Int?
-    
+    var filterState : String = ""
     
     @IBOutlet weak var libraryTableView: UITableView!
     @IBOutlet weak var nameLabel: UILabel!
+    
+    @IBOutlet weak var totalBtn: UIButton!
+    @IBOutlet weak var completedBookBtn: UIButton!
+    @IBOutlet weak var readingBookBtn: UIButton!
+    @IBOutlet weak var wannaBookBtn: UIButton!
     
     
     
@@ -33,19 +39,76 @@ class LibraryViewController: UIViewController{
         
         dbFirebase = DbFirebase(parentNotification: manageDatabase)
         dbFirebase?.setQuery(from: 1, to: 10000)
-       
         
+        totalBtn.addTarget(self, action: #selector(totalPressed), for: .touchUpInside)
+        completedBookBtn.addTarget(self, action: #selector(completedPressed), for: .touchUpInside)
+        readingBookBtn.addTarget(self, action: #selector(readingPressed), for: .touchUpInside)
+        wannaBookBtn.addTarget(self, action: #selector(wannaPressed), for: .touchUpInside)
+                
+        // 초기화 시 모든 책을 보여줍니다.
+        filteredBooks = books
+        // 테이블 뷰에 셀 등록
+       libraryTableView.register(UITableViewCell.self, forCellReuseIdentifier: "bookCell")
+        
+        
+        libraryTableView.reloadData()  // 테이블 뷰 초기화
     }
     
+    @objc func totalPressed(_ sender: UIButton){
+        print("total_Book!")
+        filteredBooks = books
+        filterState = "total"
+        libraryTableView.reloadData()
+        filterState = ""
+    }
+    @objc func completedPressed(_ sender: UIButton) {
+        print("completed_Book!")
+        filterState = "completed"
+        filteredBooks = books.filter { $0.state == "completed" }
+        print(filteredBooks)
+        libraryTableView.reloadData()
+        filterState = ""
+   }
+        
+   @objc func readingPressed(_ sender: UIButton) {
+       print("reading_Book!")
+       filterState = "reading"
+       filteredBooks = books.filter { $0.state == "reading" }
+       print(filteredBooks)
+       libraryTableView.reloadData()
+       filterState = ""
+   }
+        
+   @objc func wannaPressed(_ sender: UIButton) {
+       print("wanna_Book!")
+       filterState = "wanna"
+       filteredBooks = books.filter { $0.state == "wanna" }
+       print(filteredBooks)
+       libraryTableView.reloadData()
+       filterState = ""
+   }
+    
+    
+    
+    
+    
+    
     func manageDatabase(dict: [String: Any]?, dbaction: DbAction?){
-            let book = Book.fromDict(dict: dict!)
+            //let book = Book.fromDict(dict: dict!)
+        
+        
+        guard let dict = dict, let book = Book.fromDict(dict: dict) else {
+                    print("Failed to parse book from dict: \(String(describing: dict))")
+                    return
+                }
+        
           if dbaction == .add{  // 단순히 배열에 더한다
             books.append(book)
           }
           if dbaction == .modify{ // 수정인 경우 선택된 row가 있으므로 그것을 수정
             for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
               if book.id == books[i].id{
-                  books[i] = book // 선택된 row의 시티정보 수정
+                  books[i] = book // 선택된 row의 정보 수정
                 imagePool[book.imageName] = nil
                 break
               }
@@ -74,10 +137,26 @@ class LibraryViewController: UIViewController{
 extension LibraryViewController: UITableViewDelegate{
 
     // 특정 row를 클릭하면 이 함수가 호출된다
-    func tableView(_ tableView: UITableView, didSelectRowAt
-                   indexPath: IndexPath) {
-        nameLabel.text = "   \(indexPath.row)th row was selected"
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let selectedBook = filteredBooks[indexPath.row] // 선택된 행의 책 가져오기
+//            nameLabel.text = "\(selectedBook.state) - \(indexPath.row)th row was selected" // 책의 상태와 행 정보 출력
+//    }
+    
+//    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+//        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+//        performSegue(withIdentifier: "GotoDetail", sender: indexPath)
+//    }
+    // 특정 row를 클릭하면 이 함수가 호출된다
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            performSegue(withIdentifier: "GotoDetail", sender: indexPath)
+        }
+
+    // 셀의 높이를 일정하게 설정
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 100//return CGFloat(books.count)
+        }
+    
+    
 }
 
 extension LibraryViewController: UITableViewDataSource{
@@ -85,15 +164,33 @@ extension LibraryViewController: UITableViewDataSource{
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return books.count
+        if(filterState=="completed"||filterState=="reading"||filterState=="wanna"){
+            return filteredBooks.count
+        }
+        else{
+            return books.count
+        }
     }
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell")!//pool에 저장하여 재사용
+        //let cell = UITableViewCell()
         
-        let cell = UITableViewCell()
+            
+        for view in cell.contentView.subviews{
+            view.removeFromSuperview()
+        }
         
-        let book = books[indexPath.row]// 현재 indexPath에 해당하는 책을 가져옴
+        
+        // 필터링된 배열에서 해당 인덱스의 책을 가져옴
+            let book: Book
+            if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
+                print(filteredBooks)
+                book = filteredBooks[indexPath.row]
+            } else {
+                book = books[indexPath.row]
+            }
         
         let nameLabel = UILabel()
         nameLabel.numberOfLines = 0
@@ -103,6 +200,18 @@ extension LibraryViewController: UITableViewDataSource{
         let descriptionLabel = UILabel()
         descriptionLabel.numberOfLines = 0
         descriptionLabel.text = book.description
+      
+  
+        if book.state == "completed" {
+            cell.detailTextLabel?.backgroundColor = .blue
+        } else {
+            cell.detailTextLabel?.backgroundColor = .clear
+        }
+    
+        
+        //let imageView = UIImageView()
+        //imageView.loadImage(from: book.imageName)
+        
         let imageView = UIImageView(image: UIImage(named: book.imageName)) // 책의 이미지로 설정
         var outer = UIStackView(arrangedSubviews: [imageView,nameLabel,descriptionLabel])
         outer.spacing = 10
@@ -125,3 +234,31 @@ extension LibraryViewController: UITableViewDataSource{
 }
 
 
+//extension LibraryViewController{
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        let bookDetailViewController = segue.destination as? BookDetailViewController
+//        
+//        bookDetailViewController!.libraryViewController = self
+//        if let indexPath = sender as? IndexPath{
+//            bookDetailViewController?.selectedBook = indexPath.row
+//        }
+//    }
+//    
+//    
+//}
+
+extension LibraryViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "GotoDetail" {
+            if let bookDetailViewController = segue.destination as? BookDetailViewController, let indexPath = sender as? IndexPath {
+                let book: Book
+                if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
+                    book = filteredBooks[indexPath.row]
+                } else {
+                    book = books[indexPath.row]
+                }
+                bookDetailViewController.book = book
+            }
+        }
+    }
+}

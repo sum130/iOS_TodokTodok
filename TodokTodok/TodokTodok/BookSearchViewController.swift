@@ -48,6 +48,11 @@ extension BookSearchViewController: UITableViewDelegate{
                    indexPath: IndexPath) {
         resultLabel.text = "   \(indexPath.row)th row was selected"
     }
+    
+    // 셀의 높이를 일정하게 설정
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 100
+        }
 }
 
 
@@ -61,8 +66,7 @@ extension BookSearchViewController: UITableViewDataSource{
     }
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
+
         let cell = UITableViewCell()
         
         let book = books[indexPath.row]
@@ -70,10 +74,16 @@ extension BookSearchViewController: UITableViewDataSource{
         let nameLabel = UILabel()
         nameLabel.numberOfLines = 0
         nameLabel.text = book.name
-        nameLabel.textColor = .gray
-        nameLabel.backgroundColor = .black
-        let imageView = UIImageView(image: papaImage) //UIImageView(image: book.uiImage())
-        var outer = UIStackView(arrangedSubviews: [imageView,nameLabel])
+        
+        let writerLabel = UILabel()
+        writerLabel.numberOfLines = 0
+        writerLabel.text = book.writer
+        writerLabel.textColor = .gray
+        
+        let imageView = UIImageView()
+        imageView.loadImage(from: book.imageName)
+        
+        var outer = UIStackView(arrangedSubviews: [imageView,nameLabel,writerLabel])
         outer.spacing = 10
         
         cell.contentView.addSubview(outer)
@@ -84,7 +94,8 @@ extension BookSearchViewController: UITableViewDataSource{
                     outer.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 1),
                     outer.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5)
+                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5),
+                    writerLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 2)
                 ])
         
         return cell
@@ -149,7 +160,7 @@ extension BookSearchViewController: XMLParserDelegate{
         
             if elementName == "item" {
                 self.currentBook = nil
-                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "")
+                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "wanna")
                 if let itemId = attributeDict["itemId"], let id = Int(itemId) {
                     currentBook?.id = id
                 }
@@ -169,23 +180,19 @@ extension BookSearchViewController: XMLParserDelegate{
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
             switch elementName {
             case "title":
-                print("title -> \(foundCharacters)") // 디버깅을 위해 추가
                 currentBook?.name = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
                 print(currentBook)
             case "author":
-                print("author -> \(foundCharacters)")
                 currentBook?.writer = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
                 print(currentBook)
             case "description":
-                print("description -> \(foundCharacters)")
                 currentBook?.description = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
                 print(currentBook)
             case "cover":
-                print("cover -> \(foundCharacters)")
                 currentBook?.imageName = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
                 print(currentBook)
             case "item":
-                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: ""))
+                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: "", state: "wanna"))
                     self.currentBook = nil
             default:
                 break
@@ -218,24 +225,30 @@ extension BookSearchViewController: XMLParserDelegate{
         func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
             print("XML Parsing Error: \(parseError)")
         }
-        
-        //    func makeUpBookInfo(jsonData: Data) -> (String, Data) {
-        //
-        //        let jsonObjct = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
-        //
-        //        let id = jsonObjct["itemID"] as! Double
-        //        let name = jsonObjct["bookName"] as! String
-        //        let writer = jsonObjct["writer"] as! String
-        //        let description = jsonObjct["descript"] as! String
-        //        let imageName = jsonObjct["imageName"] as! String
-        //
-        //        var infoStr = "제목: \(name), 작가: \(writer)\n\(description)"
-        //        let imageUrl = URL(string: "http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=336137245&amp;partner=openAPI&amp;start=api")
-        //        //imageName)
-        //
-        //        let data = try! Data(contentsOf: imageUrl!)
-        //        return (infoStr, data)
-        //    }
-        
-        
     }
+
+extension UIImageView {//책이미지 다운받기
+    func loadImage(from url: String) {
+        guard let imageURL = URL(string: url) else { return }
+        
+        // Create a URL session data task to fetch the image data
+        let task = URLSession.shared.dataTask(with: imageURL) { data, response, error in
+            // Check for errors and ensure we received data
+            guard let imageData = data, error == nil else {
+                print("Failed to download image: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            // Create an image from the data
+            let image = UIImage(data: imageData)
+            
+            // Update the UI on the main thread
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        }
+        
+        // Start the data task
+        task.resume()
+    }
+}

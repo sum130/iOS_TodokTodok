@@ -9,6 +9,7 @@ import Foundation
 
 import SwiftUI
 import CoreLocation
+import UIKit
 
 struct Book: Hashable, Codable, Identifiable {
     var id: Int
@@ -16,13 +17,15 @@ struct Book: Hashable, Codable, Identifiable {
     var writer: String
     var description: String
     var imageName: String
+    var state: String
     
-    init(id: Int, name: String, writer: String, description: String, imageName: String) {
+    init(id: Int, name: String, writer: String, description: String, imageName: String, state: String) {
         self.id = id
         self.name = name
         self.writer = writer
         self.description = description
         self.imageName = imageName
+        self.state = state
     }
 
     func uiImage(size: CGSize? = nil) -> UIImage?{
@@ -60,22 +63,36 @@ extension Book{
         dict["writer"] = book.writer
         dict["description"] = book.description
         dict["imageName"] = book.imageName
+        dict["state"] = book.state
 
         dict["datetime"] = Date().timeIntervalSince1970//현재 시간
         return dict
     }
+    static func fromDict(dict: [String: Any]) -> Book? {
+            guard let id = dict["id"] as? Int,
+                  let name = dict["name"] as? String,
+                  let writer = dict["writer"] as? String,
+                  let description = dict["description"] as? String,
+                  var state = dict["state"] as? String,
+                  let imageName = dict["imageName"] as? String else {
+                print("Failed to parse Book from dict: \(dict)")
+                return nil
+            }
+
+        return Book(id: id, name: name, writer: writer, description: description, imageName: imageName, state: state)
+        }
     
-    static func fromDict(dict: [String: Any]) -> Book{
-        
-        let id = dict["id"] as! Int
-        let name = dict["name"] as! String
-        let writer = dict["writer"] as! String
-        let description = dict["description"] as! String
-        let imageName = dict["imageName"] as! String
-
-        return Book(id: id, name: name, writer: writer, description: description, imageName: imageName)
-    }
+    
+//    static func fromDict(dict: [String: Any]) -> Book{
+//        
+//        let id = dict["id"] as! Int
+//        let name = dict["name"] as! String
+//        let writer = dict["writer"] as! String
+//        let description = dict["description"] as! String
+//        let imageName = dict["imageName"] as! String
+//
+//        return Book(id: id, name: name, writer: writer, description: description, imageName: imageName)
+//    }
 }
-
 
 
