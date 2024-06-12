@@ -258,6 +258,8 @@ extension LibraryViewController {
                     book = books[indexPath.row]
                 }
                 bookDetailViewController.book = book
+                bookDetailViewController.libraryViewController = self
+                                bookDetailViewController.selectedBook = indexPath.row
             }
         }
     }
