@@ -74,23 +74,23 @@ class BookDetailViewController: UIViewController {
                 self?.memoLabel.text = "\nMemo: " + newMemo
                 
                 // libraryViewController에도 변경 사항을 반영
-                                if let index = self?.selectedBook {
-                                    if index < self?.libraryViewController?.books.count ?? 0 {
-                                        self?.libraryViewController?.books[index].memo = newMemo
-                                    }
-                                    if index < self?.libraryViewController?.filteredBooks.count ?? 0 {
-                                        self?.libraryViewController?.filteredBooks[index].memo = newMemo
-                                    }
-                                    self?.libraryViewController?.libraryTableView.reloadData()
-                                }
-                                
-                                // recordViewController에도 변경 사항을 반영
-                                if let index = self?.selectedBook {
-                                    if index < self?.recordViewController?.recordedBooks.count ?? 0 {
-                                        self?.recordViewController?.recordedBooks[index].memo = newMemo
-                                        self?.recordViewController?.recordTableView.reloadData()
-                                    }
-                                }
+                if let index = self?.selectedBook {
+                    if index < self?.libraryViewController?.books.count ?? 0 {
+                        self?.libraryViewController?.books[index].memo = newMemo
+                    }
+                    if index < self?.libraryViewController?.filteredBooks.count ?? 0 {
+                        self?.libraryViewController?.filteredBooks[index].memo = newMemo
+                    }
+                    self?.libraryViewController?.libraryTableView.reloadData()
+                }
+                
+                // recordViewController에도 변경 사항을 반영
+                if let index = self?.selectedBook {
+                    if index < self?.recordViewController?.recordedBooks.count ?? 0 {
+                        self?.recordViewController?.recordedBooks[index].memo = newMemo
+                        self?.recordViewController?.recordTableView.reloadData()
+                    }
+                }
             }
         }
     }
@@ -139,19 +139,29 @@ class BookDetailViewController: UIViewController {
         if var book = book {
             book.state = newState
             
-            // 변경된 상태를 contentTextView에 업데이트
+            // 변경된 상태를 contentLabel에 업데이트
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
             memoLabel.text = "\nMemo: " + book.memo
             
             // libraryViewController에도 변경 사항을 반영
             if let index = selectedBook {
-                libraryViewController?.books[index] = book
-                libraryViewController?.filteredBooks[index] = book
-                libraryViewController?.libraryTableView.reloadData()
+                // books 배열 업데이트
+                if index < libraryViewController.books.count {
+                    libraryViewController.books[index] = book
+                }
+                
+                // filteredBooks 배열 업데이트
+                if index < libraryViewController.filteredBooks.count {
+                    libraryViewController.filteredBooks[index] = book
+                }
+                
+                // UI 업데이트
+                libraryViewController.libraryTableView.reloadData()
             }
-            // 메뉴 업데이트
+            
+            // 상태 버튼 메뉴 업데이트
             setupStateButtonMenu()
-            stateBtn.setTitle(newState.capitalized, for: .normal)// 상태 버튼의 제목 업데이트
+            stateBtn.setTitle(newState.capitalized, for: .normal)
         }
     }
     
@@ -174,11 +184,20 @@ class BookDetailViewController: UIViewController {
             memoLabel.text = "\nMemo: " + book.memo
             
             // libraryViewController에도 변경 사항을 반영
-            if let index = selectedBook {
-                libraryViewController?.books[index] = book
-                libraryViewController?.filteredBooks[index] = book
-                libraryViewController?.libraryTableView.reloadData()
-            }
+                    if let index = selectedBook {
+                        // books 배열 업데이트
+                        if index < libraryViewController.books.count {
+                            libraryViewController.books[index] = book
+                        }
+                        
+                        // filteredBooks 배열 업데이트
+                        if index < libraryViewController.filteredBooks.count {
+                            libraryViewController.filteredBooks[index] = book
+                        }
+                        
+                        // UI 업데이트
+                        libraryViewController.libraryTableView.reloadData()
+                    }
             
         }
     }

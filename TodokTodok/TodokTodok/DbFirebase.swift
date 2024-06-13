@@ -12,8 +12,10 @@ class DbFirebase: Database{
     // 데이터를 저장할 위치 설정
     var reference: CollectionReference = Firestore.firestore().collection("books")
 
+  
+    
+    
     // 데이터의 변화가 생기면 알려쥐 위한 클로즈
-
     var parentNotification: (([String: Any]?, DbAction?) -> Void)?
     var existQuery: ListenerRegistration?
     // 이미 설정한 Query의 존재여부
@@ -34,13 +36,15 @@ class DbFirebase: Database{
         existQuery = query.addSnapshotListener(onChangingData)
     }
 
-    func saveChange(key: String, object: [String : Any], action: DbAction) {
-        if action == .delete{
-            reference.document(key).delete()
-            return
+    // 데이터 저장 메서드
+        func saveChange(key: String, object: [String: Any], action: DbAction) {
+            let documentRef = reference.document(key)
+            if action == .delete {
+                documentRef.delete()
+            } else {
+                documentRef.setData(object)
+            }
         }
-        reference.document(key).setData(object)
-    }
     
     
     func onChangingData(querySnapshot: QuerySnapshot?, error: Error?){
@@ -60,8 +64,8 @@ class DbFirebase: Database{
             if let parentNotification = parentNotification {parentNotification(dict,action)}
         }
     }
-    // 메모 업데이트 메서드 추가
-    func updateMemo(bookId: String, newMemo: String, completion: @escaping (Error?) -> Void) {
+    // 메모 업데이트 메서드
+        func updateMemo(bookId: String, newMemo: String, completion: @escaping (Error?) -> Void) {
             let documentRef = reference.document(bookId)
             documentRef.updateData(["memo": newMemo]) { error in
                 if let error = error {
