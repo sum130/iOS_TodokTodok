@@ -68,7 +68,7 @@ extension Book{
         dict["state"] = book.state
         dict["memo"] = book.memo
 
-        dict["datetime"] = Date().timeIntervalSince1970//현재 시간
+        //dict["datetime"] = Date().timeIntervalSince1970//현재 시간
         return dict
     }
     static func fromDict(dict: [String: Any]) -> Book? {

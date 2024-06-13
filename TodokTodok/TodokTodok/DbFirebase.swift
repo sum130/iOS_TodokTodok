@@ -37,19 +37,20 @@ class DbFirebase: Database{
     }
 
     // 데이터 저장 메서드
-        func saveChange(key: String, object: [String: Any], action: DbAction) {
-            let documentRef = reference.document(key)
-            if action == .delete {
-                documentRef.delete()
-            } else {
-                documentRef.setData(object)
-            }
+    func saveChange(key: String, object: [String: Any], action: DbAction) {
+        // 이러한 key에 대하여 데이터를 add, modify, delete를 하라는 것임
+        if action == .delete{
+            reference.document(key).delete()
+            return
         }
+        // key에 대한 데이터가 이미 있으면 overwrite, 없으면 insert
+        reference.document(key).setData(object)
+    }
     
     
     func onChangingData(querySnapshot: QuerySnapshot?, error: Error?){
         guard let querySnapshot = querySnapshot else{return}
-        if (querySnapshot.documentChanges.isEmpty){
+        if (querySnapshot.documentChanges.count == 0){
             return
         }
         
@@ -64,9 +65,11 @@ class DbFirebase: Database{
             if let parentNotification = parentNotification {parentNotification(dict,action)}
         }
     }
+    
     // 메모 업데이트 메서드
         func updateMemo(bookId: String, newMemo: String, completion: @escaping (Error?) -> Void) {
             let documentRef = reference.document(bookId)
+            print("memosave..")
             documentRef.updateData(["memo": newMemo]) { error in
                 if let error = error {
                     print("Error updating memo: \(error)")
