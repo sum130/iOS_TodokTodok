@@ -160,7 +160,7 @@ extension BookSearchViewController: XMLParserDelegate{
         
             if elementName == "item" {
                 self.currentBook = nil
-                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "wanna")
+                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "wanna", memo: "")
                 if let itemId = attributeDict["itemId"], let id = Int(itemId) {
                     currentBook?.id = id
                 }
@@ -192,7 +192,7 @@ extension BookSearchViewController: XMLParserDelegate{
                 currentBook?.imageName = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
                 print(currentBook)
             case "item":
-                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: "", state: "wanna"))
+                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: "", state: "wanna", memo: ""))
                     self.currentBook = nil
             default:
                 break

@@ -15,9 +15,11 @@ class BookDetailViewController: UIViewController {
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var stateBtn: UIButton!
     @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var memoLabel: UILabel!
     
     var book : Book?
     var libraryViewController : LibraryViewController!
+    var recordViewController : recordViewController!
     var selectedBook: Int?
     
     override func viewDidLoad() {
@@ -28,6 +30,7 @@ class BookDetailViewController: UIViewController {
             titleLabel.text = book.name
             coverImageView.image = UIImage(named: book.imageName)
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
+            memoLabel.text = "\nMemo: " + book.memo
             
             // 상태 버튼의 초기 선택 상태 설정
             let selectedState: String
@@ -48,7 +51,20 @@ class BookDetailViewController: UIViewController {
         // stateBtn 메뉴 설정
         setupStateButtonMenu()
            
+        
+        // memoLabel에 탭 제스처 인식기 추가
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(memoLabelTapped))
+        memoLabel.isUserInteractionEnabled = true
+        memoLabel.addGestureRecognizer(tapGesture)
     }
+    
+    
+    @objc func memoLabelTapped() {
+        print("clicked")
+        performSegue(withIdentifier: "showWriteMemo", sender: self)
+    }
+    
+    
     
     func setupStateButtonMenu() {
         // 기본 선택 요소 설정
@@ -94,6 +110,7 @@ class BookDetailViewController: UIViewController {
             
             // 변경된 상태를 contentTextView에 업데이트
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
+            memoLabel.text = "\nMemo: " + book.memo
             
             // libraryViewController에도 변경 사항을 반영
             if let index = selectedBook {
@@ -123,6 +140,7 @@ class BookDetailViewController: UIViewController {
             
             // 변경된 상태를 contentTextView에 업데이트
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
+            memoLabel.text = "\nMemo: " + book.memo
             
             // libraryViewController에도 변경 사항을 반영
             if let index = selectedBook {

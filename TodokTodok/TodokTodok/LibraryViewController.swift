@@ -142,10 +142,7 @@ extension LibraryViewController: UITableViewDelegate{
 //            nameLabel.text = "\(selectedBook.state) - \(indexPath.row)th row was selected" // 책의 상태와 행 정보 출력
 //    }
     
-//    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-//        tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        performSegue(withIdentifier: "GotoDetail", sender: indexPath)
-//    }
+
     // 특정 row를 클릭하면 이 함수가 호출된다
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             performSegue(withIdentifier: "GotoDetail", sender: indexPath)
@@ -197,7 +194,7 @@ extension LibraryViewController: UITableViewDataSource{
         
         let descriptionLabel = UILabel()
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.text = book.description
+        descriptionLabel.text = book.writer
       
   
         if book.state == "completed" {

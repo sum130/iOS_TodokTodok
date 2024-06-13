@@ -18,14 +18,16 @@ struct Book: Hashable, Codable, Identifiable {
     var description: String
     var imageName: String
     var state: String
+    var memo: String
     
-    init(id: Int, name: String, writer: String, description: String, imageName: String, state: String) {
+    init(id: Int, name: String, writer: String, description: String, imageName: String, state: String, memo: String) {
         self.id = id
         self.name = name
         self.writer = writer
         self.description = description
         self.imageName = imageName
         self.state = state
+        self.memo = memo
     }
 
     func uiImage(size: CGSize? = nil) -> UIImage?{
@@ -64,6 +66,7 @@ extension Book{
         dict["description"] = book.description
         dict["imageName"] = book.imageName
         dict["state"] = book.state
+        dict["memo"] = book.memo
 
         dict["datetime"] = Date().timeIntervalSince1970//현재 시간
         return dict
@@ -74,12 +77,14 @@ extension Book{
                   let writer = dict["writer"] as? String,
                   let description = dict["description"] as? String,
                   var state = dict["state"] as? String,
-                  let imageName = dict["imageName"] as? String else {
+                  let imageName = dict["imageName"] as? String,
+                  var memo = dict["memo"] as? String
+        else {
                 print("Failed to parse Book from dict: \(dict)")
                 return nil
             }
 
-        return Book(id: id, name: name, writer: writer, description: description, imageName: imageName, state: state)
+        return Book(id: id, name: name, writer: writer, description: description, imageName: imageName, state: state, memo: memo)
         }
     
     

@@ -26,6 +26,8 @@ class recordViewController: UIViewController {
         recordTableView.dataSource = self
         recordTableView.delegate = self
         
+        recordedBooks = recordedBooks.filter { $0.memo != "" }
+        
         dbFirebase = DbFirebase(parentNotification: manageDatabase)
         //아래 쿼리를 설정하면 이를 만족하는 도시만큼 manageDatabase를 호출해준다?
         //누가? Firebase가 onChangingData()함수를 통해서.
@@ -84,7 +86,8 @@ extension recordViewController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedBook = recordedBooks[indexPath.row] // 선택된 행의 책 가져오기
-            noticeLabel.text = "\(selectedBook.state) - \(indexPath.row)th row was selected" // 책의 상태와 행 정보 출력
+            noticeLabel.text = "\(selectedBook.memo) - \(indexPath.row)th row was selected" // 책의 상태와 행 정보 출력
+        performSegue(withIdentifier: "recordToDetail", sender: indexPath)
     }
 
     // 셀의 높이를 일정하게 설정
@@ -115,7 +118,7 @@ extension recordViewController: UITableViewDataSource{
         
         let descriptionLabel = UILabel()
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.text = book.description
+        descriptionLabel.text = book.writer
       
   
         let imageView = UIImageView(image: UIImage(named: book.imageName)) // 책의 이미지로 설정
@@ -137,4 +140,19 @@ extension recordViewController: UITableViewDataSource{
         return cell
     }
     
+}
+
+
+extension recordViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "recordToDetail" {
+            if let bookDetailViewController = segue.destination as? BookDetailViewController, let indexPath = sender as? IndexPath {
+                let book: Book
+                book = recordedBooks[indexPath.row]
+                bookDetailViewController.book = book
+                bookDetailViewController.recordViewController = self
+                bookDetailViewController.selectedBook = indexPath.row
+            }
+        }
+    }
 }
