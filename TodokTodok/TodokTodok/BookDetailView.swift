@@ -74,17 +74,23 @@ class BookDetailViewController: UIViewController {
                 self?.memoLabel.text = "\nMemo: " + newMemo
                 
                 // libraryViewController에도 변경 사항을 반영
-                if let index = self?.selectedBook {
-                    self?.libraryViewController?.books[index].memo = newMemo
-                    self?.libraryViewController?.filteredBooks[index].memo = newMemo
-                    self?.libraryViewController?.libraryTableView.reloadData()
-                }
-                
-                // recordViewController에도 변경 사항을 반영
-                if let index = self?.selectedBook {
-                    self?.recordViewController?.recordedBooks[index].memo = newMemo
-                    self?.recordViewController?.recordTableView.reloadData()
-                }
+                                if let index = self?.selectedBook {
+                                    if index < self?.libraryViewController?.books.count ?? 0 {
+                                        self?.libraryViewController?.books[index].memo = newMemo
+                                    }
+                                    if index < self?.libraryViewController?.filteredBooks.count ?? 0 {
+                                        self?.libraryViewController?.filteredBooks[index].memo = newMemo
+                                    }
+                                    self?.libraryViewController?.libraryTableView.reloadData()
+                                }
+                                
+                                // recordViewController에도 변경 사항을 반영
+                                if let index = self?.selectedBook {
+                                    if index < self?.recordViewController?.recordedBooks.count ?? 0 {
+                                        self?.recordViewController?.recordedBooks[index].memo = newMemo
+                                        self?.recordViewController?.recordTableView.reloadData()
+                                    }
+                                }
             }
         }
     }

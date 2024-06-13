@@ -40,15 +40,15 @@ class writeMemoViewController: UIViewController {
         }
         
         // Firebase에 메모 업데이트
-        dbFirebase?.updateMemo(bookId: String(book.id), newMemo: newMemo) { [weak self] error in
-            if let error = error {
-                print("Failed to update memo in Firebase: \(error)")
-                // 실패 시 오류 처리 로직을 추가할 수 있습니다.
-            } else {
-                // 성공 시 클로저 호출하여 UI 업데이트
-                self?.saveMemo?(newMemo)
-                self?.navigationController?.popViewController(animated: true)
-            }
-        }
+                dbFirebase?.updateMemo(bookId: String(book.id), newMemo: newMemo) { [weak self] error in
+                    if let error = error {
+                        print("Failed to update memo in Firebase: \(error)")
+                        // 실패 시 오류 처리 로직을 추가할 수 있습니다.
+                    } else {
+                        // 성공 시 클로저 호출하여 UI 업데이트
+                        self?.saveMemo?(newMemo)
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
     }
 }
