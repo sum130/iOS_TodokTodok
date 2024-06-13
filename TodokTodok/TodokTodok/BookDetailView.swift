@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class BookDetailViewController: UIViewController {
 
     
@@ -21,6 +22,7 @@ class BookDetailViewController: UIViewController {
     var libraryViewController : LibraryViewController!
     var recordViewController : recordViewController!
     var selectedBook: Int?
+    var dbFirebase: DbFirebase? // Firebase 인스턴스 생성
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,8 +62,31 @@ class BookDetailViewController: UIViewController {
     
     
     @objc func memoLabelTapped() {
-        print("clicked")
         performSegue(withIdentifier: "showWriteMemo", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showWriteMemo", let memoVC = segue.destination as? writeMemoViewController {
+            memoVC.book = book
+            memoVC.dbFirebase = dbFirebase  // Firebase 인스턴스 전달
+            memoVC.saveMemo = { [weak self] newMemo in
+                self?.book?.memo = newMemo
+                self?.memoLabel.text = "\nMemo: " + newMemo
+                
+                // libraryViewController에도 변경 사항을 반영
+                if let index = self?.selectedBook {
+                    self?.libraryViewController?.books[index].memo = newMemo
+                    self?.libraryViewController?.filteredBooks[index].memo = newMemo
+                    self?.libraryViewController?.libraryTableView.reloadData()
+                }
+                
+                // recordViewController에도 변경 사항을 반영
+                if let index = self?.selectedBook {
+                    self?.recordViewController?.recordedBooks[index].memo = newMemo
+                    self?.recordViewController?.recordTableView.reloadData()
+                }
+            }
+        }
     }
     
     

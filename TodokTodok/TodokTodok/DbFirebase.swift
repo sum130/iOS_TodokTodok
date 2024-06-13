@@ -18,7 +18,7 @@ class DbFirebase: Database{
     var existQuery: ListenerRegistration?
     // 이미 설정한 Query의 존재여부
 
-    
+    // 생성자에 기본값 설정
     required init(parentNotification: (([String : Any]?, DbAction?) -> Void)?) {
         // 클로저를 보관
         self.parentNotification = parentNotification
@@ -45,7 +45,7 @@ class DbFirebase: Database{
     
     func onChangingData(querySnapshot: QuerySnapshot?, error: Error?){
         guard let querySnapshot = querySnapshot else{return}
-        if (querySnapshot.documentChanges.count == 0){
+        if (querySnapshot.documentChanges.isEmpty){
             return
         }
         
@@ -60,6 +60,16 @@ class DbFirebase: Database{
             if let parentNotification = parentNotification {parentNotification(dict,action)}
         }
     }
+    // 메모 업데이트 메서드 추가
+    func updateMemo(bookId: String, newMemo: String, completion: @escaping (Error?) -> Void) {
+            let documentRef = reference.document(bookId)
+            documentRef.updateData(["memo": newMemo]) { error in
+                if let error = error {
+                    print("Error updating memo: \(error)")
+                }
+                completion(error)
+            }
+        }
 }
 
 

@@ -8,7 +8,7 @@
 import UIKit
 
 class writeMemoViewController: UIViewController {
-
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var memoTextView: UITextView!
@@ -34,7 +34,21 @@ class writeMemoViewController: UIViewController {
     
     @IBAction func saveBtnTapped(_ sender: UIButton) {
         saveMemo?(memoTextView.text)
-        navigationController?.popViewController(animated: true)
+        guard let newMemo = memoTextView.text, let book = book else {
+            print("Failed to get new memo text or book is nil")
+            return
+        }
+        
+        // Firebase에 메모 업데이트
+        dbFirebase?.updateMemo(bookId: String(book.id), newMemo: newMemo) { [weak self] error in
+            if let error = error {
+                print("Failed to update memo in Firebase: \(error)")
+                // 실패 시 오류 처리 로직을 추가할 수 있습니다.
+            } else {
+                // 성공 시 클로저 호출하여 UI 업데이트
+                self?.saveMemo?(newMemo)
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
     }
-    
 }
