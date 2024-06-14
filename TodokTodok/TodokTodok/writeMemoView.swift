@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 class writeMemoViewController: UIViewController {
     
@@ -76,12 +77,13 @@ class writeMemoViewController: UIViewController {
             print("Document Data:", dict)
      ////
                     
-            // 변경 사항 저장
-                        if let dbFirebase = self.libraryViewController?.dbFirebase {
-                            dbFirebase.saveChange(key: documentId, object: dict, action: operation)
-                        } else {
-                            print("Error: dbFirebase is nil")
-                        }
+            booksCollection.document(documentId).setData(dict) { error in
+                   if let error = error {
+                       print("Error updating document: \(error.localizedDescription)")
+                   } else {
+                       print("Document successfully updated")
+                   }
+               }
         }
     }
 }
