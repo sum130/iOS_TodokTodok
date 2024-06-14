@@ -228,10 +228,12 @@ extension LibraryViewController: UITableViewDataSource{
         }
     
         
-        //let imageView = UIImageView()
-        //imageView.loadImage(from: book.imageName)
+        let imageView = UIImageView()
+        imageView.loadImage(from: book.imageName)
         
-        let imageView = UIImageView(image: UIImage(named: book.imageName)) // 책의 이미지로 설정
+        //let imageView = UIImageView(image: UIImage(named: book.imageName)) // 책의 이미지로 설정
+        
+        
         var outer = UIStackView(arrangedSubviews: [imageView,nameLabel,descriptionLabel])
         outer.spacing = 10
         
