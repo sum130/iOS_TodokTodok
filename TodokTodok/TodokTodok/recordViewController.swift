@@ -10,15 +10,16 @@ import UIKit
 class recordViewController: UIViewController {
 
     var recordedBooks: [Book] = TodokTodok.load("bookData.json")
-    var dbFirebase : DbFirebase?
-    
+    var dbFirebase : DbFirebase!
+    var filteredBooks: [Book] = []  // 필터링된 책 배열
     
     @IBOutlet weak var recordLabel: UILabel!
     @IBOutlet weak var noticeLabel: UILabel!
     @IBOutlet weak var recordTableView: UITableView!
     
     let papaImage = UIImage(named: "papa")
-    
+    var filterState : String = ""
+    var isMemo : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,9 +30,16 @@ class recordViewController: UIViewController {
         recordedBooks = recordedBooks.filter { $0.memo != "" }
         
         dbFirebase = DbFirebase(parentNotification: manageDatabase)
-        //아래 쿼리를 설정하면 이를 만족하는 도시만큼 manageDatabase를 호출해준다?
-        //누가? Firebase가 onChangingData()함수를 통해서.
-        dbFirebase?.setQuery(from: 1, to: 10000)
+        if dbFirebase == nil {
+            print("DbFirebase 객체 초기화 실패")
+            // 처리할 로직 추가
+        } else {
+            dbFirebase.setQuery(from: 1, to: 10000000000)
+            print("DbFirebase 객체 초기화")
+        }
+        
+        
+        recordTableView.reloadData()  // 테이블 뷰 초기화
     }
     
     
@@ -101,10 +109,20 @@ extension recordViewController: UITableViewDataSource{
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recordedBooks.count
-    }
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return recordedBooks.count
+//    }
    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(filterState != "" && isMemo != ""){
+            return filteredBooks.count
+        }
+        else{
+            return recordedBooks.count
+        }
+    }
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         

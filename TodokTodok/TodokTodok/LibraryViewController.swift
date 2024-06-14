@@ -57,7 +57,7 @@ class LibraryViewController: UIViewController{
         // 초기화 시 모든 책을 보여줍니다.
         filteredBooks = books
         // 테이블 뷰에 셀 등록
-       libraryTableView.register(UITableViewCell.self, forCellReuseIdentifier: "bookCell")
+        libraryTableView.register(UITableViewCell.self, forCellReuseIdentifier: "bookCell")
         
         
         libraryTableView.reloadData()  // 테이블 뷰 초기화
