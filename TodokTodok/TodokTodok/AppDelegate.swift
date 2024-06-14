@@ -14,6 +14,9 @@ import FirebaseStorage
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    var window: UIWindow?
+
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -21,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         //firebase에 저장
-        Firestore.firestore().collection("tesetttt").document("id").setData(["id": 1,"name":"name","writer":"writer", "description":"hi","imageName":"papa"])
+        Firestore.firestore().collection("te22").document("id").setData(["id": 1,"name":"name","writer":"writer", "description":"hi","imageName":"papa"])
         
         //storage에 이미지 저장
         let image = UIImage(named: "papa")!

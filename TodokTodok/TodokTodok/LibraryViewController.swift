@@ -14,7 +14,7 @@ class LibraryViewController: UIViewController{
     var filteredBooks: [Book] = []  // 필터링된 책 배열
     var imagePool: [String: UIImage] = [:]
     
-    var dbFirebase : DbFirebase?
+    var dbFirebase : DbFirebase!
     var selected : Int?
     var filterState : String = ""
     
@@ -38,7 +38,16 @@ class LibraryViewController: UIViewController{
         // 전달받은 텍스트를 레이블에 설정
         
         dbFirebase = DbFirebase(parentNotification: manageDatabase)
-        dbFirebase?.setQuery(from: 1, to: 10000)
+        if dbFirebase == nil {
+            print("DbFirebase 객체 초기화 실패")
+            // 처리할 로직 추가
+        } else {
+            dbFirebase.setQuery(from: 1, to: 10000)
+            print("DbFirebase 객체 초기화")
+        }
+
+        let writeMemoVC = writeMemoViewController()
+        writeMemoVC.libraryViewController = self
         
         totalBtn.addTarget(self, action: #selector(totalPressed), for: .touchUpInside)
         completedBookBtn.addTarget(self, action: #selector(completedPressed), for: .touchUpInside)
@@ -95,7 +104,13 @@ class LibraryViewController: UIViewController{
     
     func manageDatabase(dict: [String: Any]?, dbaction: DbAction?){
             //let book = Book.fromDict(dict: dict!)
-        
+        guard let dbFirebase = dbFirebase else {
+                print("DbFirebase 객체가 초기화되지 않았습니다.")
+                return
+            }
+        if(dbFirebase != nil){
+            print("있음")
+        }
         
         guard let dict = dict, let book = Book.fromDict(dict: dict) else {
                     print("Failed to parse book from dict: \(String(describing: dict))")
@@ -228,20 +243,6 @@ extension LibraryViewController: UITableViewDataSource{
     
 }
 
-
-//extension LibraryViewController{
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let bookDetailViewController = segue.destination as? BookDetailViewController
-//        
-//        bookDetailViewController!.libraryViewController = self
-//        if let indexPath = sender as? IndexPath{
-//            bookDetailViewController?.selectedBook = indexPath.row
-//        }
-//    }
-//    
-//    
-//}
-
 extension LibraryViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "GotoDetail" {
@@ -254,7 +255,7 @@ extension LibraryViewController {
                 }
                 bookDetailViewController.book = book
                 bookDetailViewController.libraryViewController = self
-                                bookDetailViewController.selectedBook = indexPath.row
+                bookDetailViewController.selectedBook = indexPath.row
             }
         }
     }

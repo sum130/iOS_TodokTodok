@@ -7,7 +7,7 @@
 
 
 import UIKit
-
+import FirebaseFirestore
 
 class BookDetailViewController: UIViewController {
 
@@ -22,11 +22,9 @@ class BookDetailViewController: UIViewController {
     var libraryViewController : LibraryViewController!
     var recordViewController : recordViewController!
     var selectedBook: Int?
-    var dbFirebase: DbFirebase? // Firebase 인스턴스 생성
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // 책 정보 업데이트
         if let book = book {
             titleLabel.text = book.name
@@ -68,7 +66,7 @@ class BookDetailViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showWriteMemo", let memoVC = segue.destination as? writeMemoViewController {
             memoVC.book = book
-            memoVC.dbFirebase = dbFirebase  // Firebase 인스턴스 전달
+
             memoVC.saveMemo = { [weak self] newMemo in
                 self?.book?.memo = newMemo
                 self?.memoLabel.text = "\nMemo: " + newMemo
@@ -159,49 +157,86 @@ class BookDetailViewController: UIViewController {
                 libraryViewController.libraryTableView.reloadData()
             }
             
-            // 상태 버튼 메뉴 업데이트
-            setupStateButtonMenu()
-            stateBtn.setTitle(newState.capitalized, for: .normal)
-        }
-    }
-    
-    
-    @objc func stateBtnPressed(_ sender: UIButton) {
-        print("stateBtn pressed")
-        
-        // book 객체의 상태 변경
-        if var book = book {
-            if book.state == "completed" {
-                book.state = "reading"
-            } else if book.state == "reading" {
-                book.state = "wanna"
-            } else {
-                book.state = "completed"
+            
+            // Firestore에 업데이트된 상태 저장
+            let bookId = book.id
+            let booksCollection = Firestore.firestore().collection("books")
+            
+            // book.id로 문서를 조회
+            
+            booksCollection.whereField("id", isEqualTo: bookId).getDocuments { [self] (querySnapshot, error) in
+                if let error = error {
+                    print("Failed to fetch documents: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let documents = querySnapshot?.documents, !documents.isEmpty else {
+                    print("No matching documents found")
+                    return
+                }
+                
+                // 첫 번째 문서 가져오기
+                let document = documents[0]
+                let documentId = document.documentID
+                let dict = Book.toDict(book: book)
+                let operation: DbAction = document.exists ? .modify : .add
+                
+                print("Document ID:", documentId)
+                print("Document Data:", dict)
+                
+                booksCollection.document(documentId).setData(dict) { error in
+                       if let error = error {
+                           print("Error updating document: \(error.localizedDescription)")
+                       } else {
+                           print("Document successfully updated")
+                       }
+                   }
+                
+                
+                
+                // 상태 버튼 메뉴 업데이트
+                setupStateButtonMenu()
+                stateBtn.setTitle(newState.capitalized, for: .normal)
             }
-            
-            // 변경된 상태를 contentTextView에 업데이트
-            contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
-            memoLabel.text = "\nMemo: " + book.memo
-            
-            // libraryViewController에도 변경 사항을 반영
-                    if let index = selectedBook {
-                        // books 배열 업데이트
-                        if index < libraryViewController.books.count {
-                            libraryViewController.books[index] = book
-                        }
-                        
-                        // filteredBooks 배열 업데이트
-                        if index < libraryViewController.filteredBooks.count {
-                            libraryViewController.filteredBooks[index] = book
-                        }
-                        
-                        // UI 업데이트
-                        libraryViewController.libraryTableView.reloadData()
-                    }
-            
         }
+        
+        
+        func stateBtnPressed(_ sender: UIButton) {
+            print("stateBtn pressed")
+            
+            // book 객체의 상태 변경
+            if var book = book {
+                if book.state == "completed" {
+                    book.state = "reading"
+                } else if book.state == "reading" {
+                    book.state = "wanna"
+                } else {
+                    book.state = "completed"
+                }
+                
+                // 변경된 상태를 contentTextView에 업데이트
+                contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
+                memoLabel.text = "\nMemo: " + book.memo
+                
+                // libraryViewController에도 변경 사항을 반영
+                if let index = selectedBook {
+                    // books 배열 업데이트
+                    if index < libraryViewController.books.count {
+                        libraryViewController.books[index] = book
+                    }
+                    
+                    // filteredBooks 배열 업데이트
+                    if index < libraryViewController.filteredBooks.count {
+                        libraryViewController.filteredBooks[index] = book
+                    }
+                    
+                    // UI 업데이트
+                    libraryViewController.libraryTableView.reloadData()
+                }
+                
+            }
+        }
+        
     }
-
-
 }
 

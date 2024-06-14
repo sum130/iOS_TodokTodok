@@ -86,18 +86,8 @@ extension Book{
 
         return Book(id: id, name: name, writer: writer, description: description, imageName: imageName, state: state, memo: memo)
         }
+ 
     
-    
-//    static func fromDict(dict: [String: Any]) -> Book{
-//        
-//        let id = dict["id"] as! Int
-//        let name = dict["name"] as! String
-//        let writer = dict["writer"] as! String
-//        let description = dict["description"] as! String
-//        let imageName = dict["imageName"] as! String
-//
-//        return Book(id: id, name: name, writer: writer, description: description, imageName: imageName)
-//    }
 }
 
 

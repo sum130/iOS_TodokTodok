@@ -6,14 +6,14 @@
 //
 
 import Foundation
+
+import UIKit
 import FirebaseFirestore
 
 class DbFirebase: Database{
     // 데이터를 저장할 위치 설정
     var reference: CollectionReference = Firestore.firestore().collection("books")
 
-  
-    
     
     // 데이터의 변화가 생기면 알려쥐 위한 클로즈
     var parentNotification: (([String: Any]?, DbAction?) -> Void)?
@@ -36,18 +36,49 @@ class DbFirebase: Database{
         existQuery = query.addSnapshotListener(onChangingData)
     }
 
-    // 데이터 저장 메서드
+//    // 데이터 저장 메서드
+//    func saveChange(key: String, object: [String: Any], action: DbAction) {
+//        // 이러한 key에 대하여 데이터를 add, modify, delete를 하라는 것임
+//        
+//        if action == .delete{
+//            reference.document(key).delete()
+//            return
+//        }
+//        // key에 대한 데이터가 이미 있으면 overwrite, 없으면 insert
+//        reference.document(key).setData(object)
+//        print("saveChange")
+//    }
+    
     func saveChange(key: String, object: [String: Any], action: DbAction) {
-        // 이러한 key에 대하여 데이터를 add, modify, delete를 하라는 것임
-        if action == .delete{
-            reference.document(key).delete()
-            return
+            let db = Firestore.firestore()
+            
+            switch action {
+            case .add:
+                db.collection("books").document(key).setData(object) { error in
+                    if let error = error {
+                        print("Error adding document: \(error.localizedDescription)")
+                    } else {
+                        print("Document added successfully")
+                    }
+                }
+            case .modify:
+                db.collection("books").document(key).updateData(object) { error in
+                    if let error = error {
+                        print("Error updating document: \(error.localizedDescription)")
+                    } else {
+                        print("Document updated successfully")
+                    }
+                }
+            case .delete:
+                db.collection("books").document(key).delete { error in
+                    if let error = error {
+                        print("Error deleting document: \(error.localizedDescription)")
+                    } else {
+                        print("Document deleted successfully")
+                    }
+                }
+            }
         }
-        // key에 대한 데이터가 이미 있으면 overwrite, 없으면 insert
-        reference.document(key).setData(object)
-    }
-    
-    
     func onChangingData(querySnapshot: QuerySnapshot?, error: Error?){
         guard let querySnapshot = querySnapshot else{return}
         if (querySnapshot.documentChanges.count == 0){
@@ -66,17 +97,22 @@ class DbFirebase: Database{
         }
     }
     
-    // 메모 업데이트 메서드
-        func updateMemo(bookId: String, newMemo: String, completion: @escaping (Error?) -> Void) {
-            let documentRef = reference.document(bookId)
-            print("memosave..")
+//    // 메모 업데이트 메서드
+    func updateMemo(documentId: String, newMemo: String, completion: @escaping (Error?) -> Void) {
+            let documentRef = reference.document(documentId)
             documentRef.updateData(["memo": newMemo]) { error in
                 if let error = error {
-                    print("Error updating memo: \(error)")
+                    print("Error updating memo: \(error.localizedDescription)")
+                } else {
+                    print("Memo updated in Firestore with document ID: \(documentId)")
                 }
                 completion(error)
             }
         }
+//    
+    
+    
+    
 }
 
 
