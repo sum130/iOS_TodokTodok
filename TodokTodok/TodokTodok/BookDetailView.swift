@@ -153,19 +153,14 @@ class BookDetailViewController: UIViewController {
             
             
             // libraryViewController에도 변경 사항을 반영
-            if let index = selectedBook {
-                // books 배열 업데이트
-                if index < libraryViewController.books.count {
-                    libraryViewController.books[index] = book
+            if let index = selectedBook, let libraryVC = libraryViewController {
+                if index < libraryVC.books.count {
+                    libraryVC.books[index] = book
                 }
-                
-                // filteredBooks 배열 업데이트
-                if index < libraryViewController.filteredBooks.count {
-                    libraryViewController.filteredBooks[index] = book
+                if index < libraryVC.filteredBooks.count {
+                    libraryVC.filteredBooks[index] = book
                 }
-                
-                // UI 업데이트
-                libraryViewController.libraryTableView.reloadData()
+                libraryVC.libraryTableView.reloadData()
             }
             
             
@@ -182,15 +177,16 @@ class BookDetailViewController: UIViewController {
                 }
                 
                 guard let documents = querySnapshot?.documents, !documents.isEmpty else {
-                    print("No matching documents found")
+                    print("No matching documents found, adding new document")
+                    addBookToFirestore(book: book)
                     return
                 }
-                
+    
                 // 첫 번째 문서 가져오기
                 let document = documents[0]
                 let documentId = document.documentID
                 let dict = Book.toDict(book: book)
-                let operation: DbAction = document.exists ? .modify : .add
+//                let operation: DbAction = document.exists ? .modify : .add
                 
                 print("Document ID:", documentId)
                 print("Document Data:", dict)
@@ -203,13 +199,26 @@ class BookDetailViewController: UIViewController {
                        }
                    }
                 
-                
-                
                 // 상태 버튼 메뉴 업데이트
                 setupStateButtonMenu()
                 stateBtn.setTitle(newState.capitalized, for: .normal)
             }
         }
+        
+        
+        func addBookToFirestore(book: Book) {
+            let booksCollection = Firestore.firestore().collection("books")
+            let dict = Book.toDict(book: book)
+            
+            booksCollection.addDocument(data: dict) { error in
+                if let error = error {
+                    print("Error adding document: \(error.localizedDescription)")
+                } else {
+                    print("Document successfully added")
+                }
+            }
+        }
+        
         
         
         func stateBtnPressed(_ sender: UIButton) {
