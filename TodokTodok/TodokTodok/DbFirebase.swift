@@ -32,7 +32,7 @@ class DbFirebase: Database{
         }
         //새로운 쿼리를 설정한다. 원하는 필드, 원하는 데이터를 적절히 설정하면 된다.
 
-        let query = reference.whereField("id", isGreaterThanOrEqualTo : 0).whereField("id", isLessThanOrEqualTo: 10000)
+        let query = reference.whereField("id", isGreaterThanOrEqualTo : 0).whereField("id", isLessThanOrEqualTo: 10000000000)
         existQuery = query.addSnapshotListener(onChangingData)
     }
 

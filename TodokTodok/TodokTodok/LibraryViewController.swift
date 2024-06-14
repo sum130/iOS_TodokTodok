@@ -42,7 +42,7 @@ class LibraryViewController: UIViewController{
             print("DbFirebase 객체 초기화 실패")
             // 처리할 로직 추가
         } else {
-            dbFirebase.setQuery(from: 1, to: 10000)
+            dbFirebase.setQuery(from: 1, to: 10000000000)
             print("DbFirebase 객체 초기화")
         }
 
@@ -117,26 +117,42 @@ class LibraryViewController: UIViewController{
                     return
         }
         
-          if dbaction == .add{  // 단순히 배열에 더한다
-            books.append(book)
-          }
-          if dbaction == .modify{ // 수정인 경우 선택된 row가 있으므로 그것을 수정
-            for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
-              if book.id == books[i].id{
-                  books[i] = book // 선택된 row의 정보 수정
-                imagePool[book.imageName] = nil
+//          if dbaction == .add{  // 단순히 배열에 더한다
+//            books.append(book)
+//          }
+//          if dbaction == .modify{ // 수정인 경우 선택된 row가 있으므로 그것을 수정
+//            for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
+//              if book.id == books[i].id{
+//                  books[i] = book // 선택된 row의 정보 수정
+//                imagePool[book.imageName] = nil
+//                break
+//              }
+//            }
+//          }
+//          if dbaction == .delete{
+//            for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
+//              if book.id == books[i].id{
+//                  books.remove(at: i)    // 삭제한다
+//                break
+//              }
+//            }
+//          }
+        
+        switch dbaction {
+            case .add:
+                books.append(book)
+            case .modify:
+                if let index = books.firstIndex(where: { $0.id == book.id }) {
+                    books[index] = book
+                }
+            case .delete:
+                if let index = books.firstIndex(where: { $0.id == book.id }) {
+                    books.remove(at: index)
+                }
+            default:
                 break
-              }
             }
-          }
-          if dbaction == .delete{
-            for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
-              if book.id == books[i].id{
-                  books.remove(at: i)    // 삭제한다
-                break
-              }
-            }
-          }
+        
         libraryTableView.reloadData() // tableView의 내용을 업데이트한다
         print("success")
          
@@ -150,13 +166,6 @@ class LibraryViewController: UIViewController{
 }
 
 extension LibraryViewController: UITableViewDelegate{
-
-    // 특정 row를 클릭하면 이 함수가 호출된다
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let selectedBook = filteredBooks[indexPath.row] // 선택된 행의 책 가져오기
-//            nameLabel.text = "\(selectedBook.state) - \(indexPath.row)th row was selected" // 책의 상태와 행 정보 출력
-//    }
-    
 
     // 특정 row를 클릭하면 이 함수가 호출된다
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
