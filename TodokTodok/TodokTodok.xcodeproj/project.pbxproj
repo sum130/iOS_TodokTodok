@@ -16,7 +16,6 @@
 		8D4D0D4B2C117E4100A2269E /* BookSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */; };
 		8D4D0D4D2C118FEB00A2269E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D4D0D4C2C118FEB00A2269E /* GoogleService-Info.plist */; };
 		8D4D0D552C11A02A00A2269E /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4D0D542C11A02A00A2269E /* Database.swift */; };
-		8D6B8A072C19A07600E9F913 /* BookCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6B8A062C19A07600E9F913 /* BookCell.swift */; };
 		8DC207C22C161DA50030E28C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 8DC207C12C161DA50030E28C /* FirebaseFirestore */; };
 		8DC207C42C161DAE0030E28C /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8DC207C32C161DAE0030E28C /* FirebaseStorage */; };
 		8DC207C62C161DB30030E28C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8DC207C52C161DB30030E28C /* FirebaseAnalytics */; };
@@ -45,7 +44,6 @@
 		8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewController.swift; sourceTree = "<group>"; };
 		8D4D0D4C2C118FEB00A2269E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8D4D0D542C11A02A00A2269E /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
-		8D6B8A062C19A07600E9F913 /* BookCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookCell.swift; sourceTree = "<group>"; };
 		8DC207CD2C161F1A0030E28C /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		8DC207D12C1620D10030E28C /* ModelData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		8DC207D72C16347C0030E28C /* bookData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = bookData.json; path = "../../../../../Desktop/2171230smKong/ch11-2171230-KongSumin-CityFirebase/ch11-2171230-KongSumin-CityFirebase/bookData.json"; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 				8D4D0D4C2C118FEB00A2269E /* GoogleService-Info.plist */,
 				8DDD0F5F2BFCC49300E2E472 /* ViewController.swift */,
 				8D1604202C1AD67400A06953 /* writeMemoView.swift */,
-				8D6B8A062C19A07600E9F913 /* BookCell.swift */,
 				8D4D0D482C11773800A2269E /* HomeViewController.swift */,
 				8D0BD35A2C1A034F0039E1BC /* recordViewController.swift */,
 				8D4D0D4A2C117E4100A2269E /* BookSearchViewController.swift */,
@@ -213,7 +210,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D6B8A072C19A07600E9F913 /* BookCell.swift in Sources */,
 				8D4D0D552C11A02A00A2269E /* Database.swift in Sources */,
 				8DDD0F602BFCC49300E2E472 /* ViewController.swift in Sources */,
 				8D0E7E9E2C159D80006E44C5 /* DbFirebase.swift in Sources */,

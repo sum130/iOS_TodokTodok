@@ -48,6 +48,7 @@ extension BookSearchViewController: UITableViewDelegate{
                    indexPath: IndexPath) {
         resultLabel.text = "   \(indexPath.row)th row was selected"
         performSegue(withIdentifier: "SearchToDetail", sender: indexPath)
+        print(books[indexPath.row])
     }
     
     
@@ -162,7 +163,7 @@ extension BookSearchViewController: XMLParserDelegate{
         
             if elementName == "item" {
                 self.currentBook = nil
-                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "wanna", memo: "")
+                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "", memo: "")
                 if let itemId = attributeDict["itemId"], let id = Int(itemId) {
                     currentBook?.id = id
                 }
@@ -194,7 +195,7 @@ extension BookSearchViewController: XMLParserDelegate{
                 currentBook?.imageName = foundCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
                 print(currentBook)
             case "item":
-                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: "", state: "wanna", memo: ""))
+                books.append(currentBook ?? Book(id: 1, name: "", writer: "", description: "", imageName: "", state: "", memo: ""))
                     self.currentBook = nil
             default:
                 break

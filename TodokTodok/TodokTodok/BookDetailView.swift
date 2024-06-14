@@ -31,7 +31,11 @@ class BookDetailViewController: UIViewController {
             titleLabel.text = book.name
             coverImageView.image = UIImage(named: book.imageName)
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
-            memoLabel.text = "\nMemo: " + book.memo
+            if(book.memo==""){
+                memoLabel.text = "Memo: 기록 없음"
+            }else{
+                memoLabel.text = "Memo: " + book.memo
+            }
             
             // 상태 버튼의 초기 선택 상태 설정
             let selectedState: String
@@ -43,9 +47,10 @@ class BookDetailViewController: UIViewController {
             case "wanna":
                 selectedState = "wanna"
             default:
-                selectedState = ""
+                selectedState = "읽기 상태 선택"
+                
             }
-            stateBtn.setTitle(selectedState.capitalized, for: .normal)// 상태 버튼의 제목 업데이트
+            stateBtn.setTitle(selectedState, for: .normal)// 상태 버튼의 제목 업데이트
 
         }
         
@@ -108,7 +113,7 @@ class BookDetailViewController: UIViewController {
             case "wanna":
                 defaultStateTitle = "wanna"
             default:
-                defaultStateTitle = nil
+                defaultStateTitle = "읽기 상태 선택"
             }
         }
         
@@ -140,7 +145,12 @@ class BookDetailViewController: UIViewController {
             
             // 변경된 상태를 contentLabel에 업데이트
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
-            memoLabel.text = "\nMemo: " + book.memo
+            if(book.memo==""){
+                memoLabel.text = "기록 없음"
+            }else{
+                memoLabel.text = "\nMemo: " + book.memo
+            }
+            
             
             // libraryViewController에도 변경 사항을 반영
             if let index = selectedBook {
