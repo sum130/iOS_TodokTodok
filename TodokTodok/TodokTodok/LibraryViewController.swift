@@ -68,7 +68,6 @@ class LibraryViewController: UIViewController{
         filteredBooks = books
         filterState = "total"
         libraryTableView.reloadData()
-        filterState = ""
     }
     @objc func completedPressed(_ sender: UIButton) {
         print("completed_Book!")
@@ -76,7 +75,6 @@ class LibraryViewController: UIViewController{
         filteredBooks = books.filter { $0.state == "completed" }
         print(filteredBooks)
         libraryTableView.reloadData()
-        filterState = ""
    }
         
    @objc func readingPressed(_ sender: UIButton) {
@@ -85,7 +83,6 @@ class LibraryViewController: UIViewController{
        filteredBooks = books.filter { $0.state == "reading" }
        print(filteredBooks)
        libraryTableView.reloadData()
-       filterState = ""
    }
         
    @objc func wannaPressed(_ sender: UIButton) {
@@ -94,7 +91,6 @@ class LibraryViewController: UIViewController{
        filteredBooks = books.filter { $0.state == "wanna" }
        print(filteredBooks)
        libraryTableView.reloadData()
-       filterState = ""
    }
     
     
@@ -196,47 +192,67 @@ extension LibraryViewController: UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell")!//pool에 저장하여 재사용
         //let cell = UITableViewCell()
         
-            
-        for view in cell.contentView.subviews{
+//        // 필터링된 배열에서 해당 인덱스의 책을 가져옴
+        let book: Book
+        if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
+            print(filteredBooks)
+            book = filteredBooks[indexPath.row]
+        } else {
+            book = books[indexPath.row]
+        }
+
+        
+    // 태그를 사용하여 서브뷰 식별
+        let tagImageView = 100
+        let tagNameLabel = 101
+        let tagDescriptionLabel = 102
+    // UIImageView 재사용 또는 생성
+        var imageView: UIImageView
+        if let existingImageView = cell.contentView.viewWithTag(tagImageView) as? UIImageView {
+            imageView = existingImageView
+        } else {
+            imageView = UIImageView()
+            imageView.tag = tagImageView
+            cell.contentView.addSubview(imageView)
+        }
+        imageView.loadImage(from: book.imageName, placeholder: papaImage)
+        
+        // UILabel 재사용 또는 생성 (Name Label)
+        var nameLabel: UILabel
+        if let existingNameLabel = cell.contentView.viewWithTag(tagNameLabel) as? UILabel {
+            nameLabel = existingNameLabel
+        } else {
+            nameLabel = UILabel()
+            nameLabel.tag = tagNameLabel
+            nameLabel.numberOfLines = 0
+            nameLabel.textColor = .black
+            cell.contentView.addSubview(nameLabel)
+        }
+        nameLabel.text = book.name
+        
+        // UILabel 재사용 또는 생성 (Description Label)
+        var descriptionLabel: UILabel
+        if let existingDescriptionLabel = cell.contentView.viewWithTag(tagDescriptionLabel) as? UILabel {
+            descriptionLabel = existingDescriptionLabel
+        } else {
+            descriptionLabel = UILabel()
+            descriptionLabel.tag = tagDescriptionLabel
+            descriptionLabel.numberOfLines = 0
+            cell.contentView.addSubview(descriptionLabel)
+        }
+        descriptionLabel.text = book.writer
+        
+    
+        
+        
+        // 기존의 UIStackView 제거
+        for view in cell.contentView.subviews where view is UIStackView {
             view.removeFromSuperview()
         }
         
-        
-        // 필터링된 배열에서 해당 인덱스의 책을 가져옴
-            let book: Book
-            if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
-                print(filteredBooks)
-                book = filteredBooks[indexPath.row]
-            } else {
-                book = books[indexPath.row]
-            }
-        
-        let nameLabel = UILabel()
-        nameLabel.numberOfLines = 0
-        nameLabel.text = book.name
-        nameLabel.textColor = .black
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.text = book.writer
-      
-  
-        if book.state == "completed" {
-            cell.detailTextLabel?.backgroundColor = .blue
-        } else {
-            cell.detailTextLabel?.backgroundColor = .clear
-        }
-    
-        
-        let imageView = UIImageView()
-        imageView.loadImage(from: book.imageName)
-        
-        //let imageView = UIImageView(image: UIImage(named: book.imageName)) // 책의 이미지로 설정
-        
-        
+        // 새로운 UIStackView 추가
         var outer = UIStackView(arrangedSubviews: [imageView,nameLabel,descriptionLabel])
         outer.spacing = 10
-        
         cell.contentView.addSubview(outer)
         outer.translatesAutoresizingMaskIntoConstraints = false
         
@@ -250,9 +266,9 @@ extension LibraryViewController: UITableViewDataSource{
                 ])
         
         return cell
-    }
+        }
     
-}
+    }
 
 extension LibraryViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -267,6 +283,29 @@ extension LibraryViewController {
                 bookDetailViewController.book = book
                 bookDetailViewController.libraryViewController = self
                 bookDetailViewController.selectedBook = indexPath.row
+            }
+        }
+    }
+}
+
+
+// UIImageView extension을 추가하여 URL에서 이미지를 로드하는 메서드를 정의합니다.
+extension UIImageView {
+    func loadImage(from urlString: String?, placeholder: UIImage?) {
+        guard let urlString = urlString, let url = URL(string: urlString) else {
+            self.image = placeholder
+            return
+        }
+        
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.image = image
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self?.image = placeholder
+                }
             }
         }
     }

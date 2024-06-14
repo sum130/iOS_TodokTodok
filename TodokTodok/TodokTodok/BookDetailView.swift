@@ -24,12 +24,15 @@ class BookDetailViewController: UIViewController {
     var bookSearchViewController: BookSearchViewController!
     var selectedBook: Int?
     
+    let papaImage = UIImage(named: "papa")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // 책 정보 업데이트
         if let book = book {
             titleLabel.text = book.name
-            coverImageView.image = UIImage(named: book.imageName)
+            //coverImageView.image = UIImage(named: book.imageName)
+            coverImageView.loadImage(from: book.imageName, placeholder: papaImage)
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
             if(book.memo==""){
                 memoLabel.text = "Memo: 기록 없음"
@@ -203,6 +206,7 @@ class BookDetailViewController: UIViewController {
                 setupStateButtonMenu()
                 stateBtn.setTitle(newState.capitalized, for: .normal)
             }
+            libraryViewController?.libraryTableView.reloadData()
         }
         
         
