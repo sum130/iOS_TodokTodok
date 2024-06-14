@@ -47,7 +47,9 @@ extension BookSearchViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt
                    indexPath: IndexPath) {
         resultLabel.text = "   \(indexPath.row)th row was selected"
+        performSegue(withIdentifier: "SearchToDetail", sender: indexPath)
     }
+    
     
     // 셀의 높이를 일정하게 설정
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -250,5 +252,21 @@ extension UIImageView {//책이미지 다운받기
         
         // Start the data task
         task.resume()
+    }
+}
+
+
+//책 상세화면으로..
+extension BookSearchViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SearchToDetail" {
+            if let bookDetailViewController = segue.destination as? BookDetailViewController, let indexPath = sender as? IndexPath {
+                let book: Book
+                book = books[indexPath.row]
+                bookDetailViewController.book = book
+                bookDetailViewController.bookSearchViewController = self
+                bookDetailViewController.selectedBook = indexPath.row
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@ class BookDetailViewController: UIViewController {
     var book : Book?
     var libraryViewController : LibraryViewController!
     var recordViewController : recordViewController!
+    var bookSearchViewController: BookSearchViewController!
     var selectedBook: Int?
     
     override func viewDidLoad() {
