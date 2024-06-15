@@ -15,7 +15,6 @@ class recordViewController: UIViewController {
     var recordedBooks: [Book] = []  // 필터링된 책 배열
     
     @IBOutlet weak var recordLabel: UILabel!
-    @IBOutlet weak var noticeLabel: UILabel!
     @IBOutlet weak var recordTableView: UITableView!
     
     let basicImage = UIImage(named: "Todok")
@@ -85,10 +84,6 @@ class recordViewController: UIViewController {
         recordedBooks = books.filter { $0.state != "" && $0.memo != "" }
         recordTableView.reloadData()  // tableView의 내용을 업데이트
     
-        if let indexPath = recordTableView.indexPathForSelectedRow{
-            //만약 선택된 row가 있다면 그 책의 description 내용을 업데이트한다
-            noticeLabel.text = books[indexPath.row].description
-        }
     }
 }
 
@@ -100,7 +95,6 @@ extension recordViewController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        let selectedBook = recordedBooks[indexPath.row]  // 필터링된 책 목록에서 선택된 책 가져오기
-       noticeLabel.text = "\(selectedBook.memo) - \(indexPath.row)th row was selected"  // 책의 상태와 행 정보 출력
        performSegue(withIdentifier: "recordToDetail", sender: indexPath)
    }
 
