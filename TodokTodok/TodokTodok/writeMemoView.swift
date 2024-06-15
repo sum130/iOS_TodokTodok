@@ -17,9 +17,12 @@ class writeMemoViewController: UIViewController {
     @IBOutlet weak var saveBtn: UIButton!
     
     
+    
     var book: Book?
     var libraryViewController : LibraryViewController!
     var saveMemo: ((String) -> Void)?
+    let papaImage = UIImage(named: "papa")
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +30,7 @@ class writeMemoViewController: UIViewController {
         
         if var book = book {
             titleLabel.text = book.name.isEmpty ? "No Title" : book.name
-            if let image = UIImage(named: book.imageName) {
-                coverImageView.image = image
-            } else {
-                coverImageView.image = UIImage(named: "papa")
-            }
+            coverImageView.loadImage(from: book.imageName, placeholder: papaImage)
             memoTextView.text = book.memo.isEmpty ? "No Memo" : book.memo
             
         }
