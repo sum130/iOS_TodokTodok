@@ -27,6 +27,7 @@ class LibraryViewController: UIViewController{
     @IBOutlet weak var wannaBookBtn: UIButton!
     
     
+    @IBOutlet weak var editBtn: UIBarButtonItem!
     
     let papaImage = UIImage(named: "papa")
     
@@ -61,7 +62,23 @@ class LibraryViewController: UIViewController{
         
         
         libraryTableView.reloadData()  // 테이블 뷰 초기화
+        
+        
     }
+    
+    
+    
+    @IBAction func editingTableViewRow(_ sender: UIBarButtonItem) {
+        if libraryTableView.isEditing == true{
+            sender.title = "Edit"
+            libraryTableView.isEditing = false
+        }
+        else{
+            sender.title = "Done"
+            libraryTableView.isEditing = true
+        }
+    }
+    
     
     @objc func totalPressed(_ sender: UIButton){
         print("total_Book!")
@@ -167,7 +184,22 @@ extension LibraryViewController: UITableViewDelegate{
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             performSegue(withIdentifier: "GotoDetail", sender: indexPath)
         }
-
+    //삭제하는 경우
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            //데베에서 삭제 해야함
+            books.remove(at: indexPath.row)
+            libraryTableView.reloadData()
+        }
+    }
+    //이동하는 경우
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let book = books.remove(at: sourceIndexPath.row)
+        books.insert(book, at: destinationIndexPath.row)
+        libraryTableView.reloadData()
+    }
+    
+    
     // 셀의 높이를 일정하게 설정
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 100//return CGFloat(books.count)
@@ -261,8 +293,8 @@ extension LibraryViewController: UITableViewDataSource{
                     outer.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 1),
                     outer.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5),
-                    descriptionLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5)
+                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3),
+                    descriptionLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3)
                 ])
         
         return cell

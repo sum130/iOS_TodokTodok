@@ -179,8 +179,8 @@ extension recordViewController: UITableViewDataSource{
                     outer.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 1),
                     outer.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5),
-                    descriptionLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5)
+                    nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3),
+                    descriptionLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3)
                 ])
         
         return cell
