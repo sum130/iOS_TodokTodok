@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LibraryViewController: UIViewController{
     
@@ -57,6 +58,7 @@ class LibraryViewController: UIViewController{
                 
         // 초기화 시 모든 책을 보여줍니다.
         filteredBooks = books
+        filterState = "total"
         // 테이블 뷰에 셀 등록
         libraryTableView.register(UITableViewCell.self, forCellReuseIdentifier: "bookCell")
         
@@ -188,10 +190,45 @@ extension LibraryViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             //데베에서 삭제 해야함
-            books.remove(at: indexPath.row)
-            libraryTableView.reloadData()
+            var selectedBook = filteredBooks[indexPath.row]
+            selectedBook.state = ""
+            selectedBook.memo = ""
+            
+            if selectedBook.id < 3{ //bookData에서 읽어온 것인 경우
+                filteredBooks.remove(at: indexPath.row)
+                libraryTableView.reloadData()
+            }else{
+                let booksCollection = Firestore.firestore().collection("books")
+                
+                // 책 ID로 Firestore를 쿼리하여 문서 ID 찾기
+               booksCollection.whereField("id", isEqualTo: selectedBook.id).getDocuments { [weak self] (querySnapshot, error) in
+                   guard let self = self else { return }
+
+                   if let error = error {
+                       print("문서 가져오기 실패: \(error.localizedDescription)")
+                       return
+                   }
+
+                   guard let document = querySnapshot?.documents.first else {
+                       print("일치하는 문서를 찾을 수 없음")
+                       return
+                   }
+
+                   let documentID = document.documentID
+                   print(documentID)
+                   // 새로운 상태와 메모로 문서 업데이트
+                   self.dbFirebase?.saveChange(key: documentID, object: Book.toDict(book: selectedBook), action: .modify)
+               }
+                libraryTableView.reloadData()
+            }
+            
+
+            
         }
     }
+    
+    
+    
     //이동하는 경우
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let book = books.remove(at: sourceIndexPath.row)
