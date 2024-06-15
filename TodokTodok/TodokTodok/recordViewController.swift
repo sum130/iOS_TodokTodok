@@ -142,11 +142,16 @@ extension recordViewController: UITableViewDelegate{
                }
                 recordTableView.reloadData()
             }
-            
-
-            
         }
     }
+    
+    
+    //이동하는 경우
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let book = recordedBooks.remove(at: sourceIndexPath.row)
+        recordedBooks.insert(book, at: destinationIndexPath.row)
+    }
+    
     
     
     
