@@ -21,7 +21,7 @@ class writeMemoViewController: UIViewController {
     var book: Book?
     var libraryViewController : LibraryViewController!
     var saveMemo: ((String) -> Void)?
-    let papaImage = UIImage(named: "papa")
+    let basicImage = UIImage(named: "Todok")
     
     
     override func viewDidLoad() {
@@ -30,7 +30,7 @@ class writeMemoViewController: UIViewController {
         
         if var book = book {
             titleLabel.text = book.name.isEmpty ? "No Title" : book.name
-            coverImageView.loadImage(from: book.imageName, placeholder: papaImage)
+            coverImageView.loadImage(from: book.imageName, placeholder: basicImage)
             memoTextView.text = book.memo.isEmpty ? "No Memo" : book.memo
             
         }

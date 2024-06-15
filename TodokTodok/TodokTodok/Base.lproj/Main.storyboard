@@ -82,28 +82,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="papa" translatesAutoresizingMaskIntoConstraints="NO" id="ke2-bM-4F2">
-                                <rect key="frame" x="157" y="213" width="78" height="80"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="TodokBack" translatesAutoresizingMaskIntoConstraints="NO" id="ke2-bM-4F2">
+                                <rect key="frame" x="16" y="153" width="361" height="616"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TodokTodok" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KA0-0x-6Ez">
-                                <rect key="frame" x="153" y="143" width="93" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XUt-fN-0v6">
-                                <rect key="frame" x="16" y="59" width="361" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="Aus-4A-t4Q" id="7bR-yg-Ufu"/>
-                                </connections>
-                            </searchBar>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="T9j-rQ-hNa">
+                                <rect key="frame" x="0.0" y="58.999999999999993" width="393" height="86.333333333333314"/>
+                                <subviews>
+                                    <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="XUt-fN-0v6">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Aus-4A-t4Q" id="7bR-yg-Ufu"/>
+                                        </connections>
+                                    </searchBar>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TodokTodok - 책을 검색하세요" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KA0-0x-6Ez">
+                                        <rect key="frame" x="0.0" y="66" width="393" height="20.333333333333329"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Mc0-Qq-05j"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="T9j-rQ-hNa" firstAttribute="top" secondItem="Mc0-Qq-05j" secondAttribute="top" id="P8U-yt-n3G"/>
+                            <constraint firstItem="T9j-rQ-hNa" firstAttribute="leading" secondItem="Mc0-Qq-05j" secondAttribute="leading" id="pxT-NS-9xI"/>
+                            <constraint firstItem="Mc0-Qq-05j" firstAttribute="trailing" secondItem="T9j-rQ-hNa" secondAttribute="trailing" id="r2q-qE-pFN"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Home" image="house" catalog="system" id="Aik-dL-ySf"/>
                     <connections>
@@ -549,10 +557,10 @@
         <segue reference="rXn-ZL-Ue3"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="TodokBack" width="1080" height="1920"/>
         <image name="books.vertical" catalog="system" width="128" height="107"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="house" catalog="system" width="128" height="104"/>
-        <image name="papa" width="78" height="80"/>
         <image name="pencil" catalog="system" width="128" height="113"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -24,7 +24,7 @@ class BookDetailViewController: UIViewController {
     var bookSearchViewController: BookSearchViewController!
     var selectedBook: Int?
     
-    let papaImage = UIImage(named: "papa")
+    let basicImage = UIImage(named: "Todok")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,7 @@ class BookDetailViewController: UIViewController {
         if let book = book {
             titleLabel.text = book.name
             //coverImageView.image = UIImage(named: book.imageName)
-            coverImageView.loadImage(from: book.imageName, placeholder: papaImage)
+            coverImageView.loadImage(from: book.imageName, placeholder: basicImage)
             contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
             if(book.memo==""){
                 memoLabel.text = "Memo: 기록 없음"

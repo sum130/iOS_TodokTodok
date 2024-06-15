@@ -18,7 +18,7 @@ class recordViewController: UIViewController {
     @IBOutlet weak var noticeLabel: UILabel!
     @IBOutlet weak var recordTableView: UITableView!
     
-    let papaImage = UIImage(named: "papa")
+    let basicImage = UIImage(named: "Todok")
     var filterState : String = ""
     var isMemo : String = ""
     
@@ -199,7 +199,7 @@ extension recordViewController: UITableViewDataSource{
                 imageView.tag = tagImageView
                 cell.contentView.addSubview(imageView)
             }
-            imageView.loadImage(from: book.imageName, placeholder: papaImage)
+            imageView.loadImage(from: book.imageName, placeholder: basicImage)
             
             // UILabel 재사용 또는 생성 (Name Label)
             var nameLabel: UILabel

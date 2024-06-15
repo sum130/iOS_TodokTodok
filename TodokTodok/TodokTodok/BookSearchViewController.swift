@@ -24,7 +24,7 @@ class BookSearchViewController: UIViewController{
     var foundCharacters: String = ""
     
     
-    let papaImage = UIImage(named: "papa")
+    let basicImage = UIImage(named: "Todok")
     
     override func viewDidLoad() {
         super.viewDidLoad()
