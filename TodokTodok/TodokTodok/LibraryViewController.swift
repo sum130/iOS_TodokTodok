@@ -153,7 +153,7 @@ class LibraryViewController: UIViewController{
         print("success")
          
           if let indexPath = libraryTableView.indexPathForSelectedRow{
-            // 만약 선택된 row가 있다면 그 도시의 discription 내용을 업데이트 한다
+            // 만약 선택된 row가 있다면 그 책의 discription 내용을 업데이트 한다
             nameLabel.text = books[indexPath.row].description
           }
 
