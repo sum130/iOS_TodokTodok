@@ -148,6 +148,12 @@ class LibraryViewController: UIViewController{
                 break
             }
         
+        
+        
+        
+        // 책의 상태가 변경될 때 filteredBooks를 다시 설정합니다.
+        updateFilteredBooks()
+        
         libraryTableView.reloadData() // tableView의 내용을 업데이트한다
         print("success")
          
@@ -156,6 +162,21 @@ class LibraryViewController: UIViewController{
         nameLabel.text = books[indexPath.row].description
       }
     }
+    
+    func updateFilteredBooks() {
+        switch filterState {
+        case "completed":
+            filteredBooks = books.filter { $0.state == "completed" }
+        case "reading":
+            filteredBooks = books.filter { $0.state == "reading" }
+        case "wanna":
+            filteredBooks = books.filter { $0.state == "wanna" }
+        default:
+            filteredBooks = books // 기본적으로 모든 책을 보여줍니다.
+        }
+    }
+    
+    
 }
 
 extension LibraryViewController: UITableViewDelegate{
@@ -174,6 +195,9 @@ extension LibraryViewController: UITableViewDelegate{
             selectedBook.memo = ""
             
             if selectedBook.id < 3{ //bookData에서 읽어온 것인 경우
+                if let index = books.firstIndex(where: { $0.id == selectedBook.id }) {
+                    books.remove(at: index)
+                }
                 filteredBooks.remove(at: indexPath.row)
                 libraryTableView.reloadData()
             }else{
@@ -196,9 +220,29 @@ extension LibraryViewController: UITableViewDelegate{
                    let documentID = document.documentID
                    print(documentID)
                    // 새로운 상태와 메모로 문서 업데이트
-                   self.dbFirebase?.saveChange(key: documentID, object: Book.toDict(book: selectedBook), action: .modify)
+                   //self.dbFirebase?.saveChange(key: documentID, object: Book.toDict(book: selectedBook), action: .modify)
+                   // Firestore에서 문서 삭제
+                   booksCollection.document(documentID).delete { error in
+                       if let error = error {
+                           print("책 삭제 실패: \(error.localizedDescription)")
+                       } else {
+                           print("책 삭제 성공!")
+                           
+                           // books 배열에서도 삭제
+                           if let index = self.books.firstIndex(where: { $0.id == selectedBook.id }) {
+                               self.books.remove(at: index)
+                           }
+                           
+                           // filteredBooks에서도 삭제
+                           if let index = self.filteredBooks.firstIndex(where: { $0.id == selectedBook.id }) {
+                               self.filteredBooks.remove(at: index)
+                           }
+                           
+                           self.libraryTableView.reloadData()
+                       }
+                   }
                }
-                libraryTableView.reloadData()
+                //libraryTableView.reloadData()
             }
             
 
