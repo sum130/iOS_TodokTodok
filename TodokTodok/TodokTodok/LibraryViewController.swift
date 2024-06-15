@@ -132,26 +132,6 @@ class LibraryViewController: UIViewController{
                     return
         }
         
-//          if dbaction == .add{  // 단순히 배열에 더한다
-//            books.append(book)
-//          }
-//          if dbaction == .modify{ // 수정인 경우 선택된 row가 있으므로 그것을 수정
-//            for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
-//              if book.id == books[i].id{
-//                  books[i] = book // 선택된 row의 정보 수정
-//                imagePool[book.imageName] = nil
-//                break
-//              }
-//            }
-//          }
-//          if dbaction == .delete{
-//            for i in 0..<books.count{   // 삭제 대상을 찾아야 한다.
-//              if book.id == books[i].id{
-//                  books.remove(at: i)    // 삭제한다
-//                break
-//              }
-//            }
-//          }
         
         switch dbaction {
             case .add:
@@ -171,21 +151,20 @@ class LibraryViewController: UIViewController{
         libraryTableView.reloadData() // tableView의 내용을 업데이트한다
         print("success")
          
-          if let indexPath = libraryTableView.indexPathForSelectedRow{
-            // 만약 선택된 row가 있다면 그 책의 discription 내용을 업데이트 한다
-            nameLabel.text = books[indexPath.row].description
-          }
-
+      if let indexPath = libraryTableView.indexPathForSelectedRow{
+        // 만약 선택된 row가 있다면 그 책의 discription 내용을 업데이트 한다
+        nameLabel.text = books[indexPath.row].description
+      }
     }
-    
 }
 
 extension LibraryViewController: UITableViewDelegate{
 
     // 특정 row를 클릭하면 이 함수가 호출된다
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            performSegue(withIdentifier: "GotoDetail", sender: indexPath)
-        }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "GotoDetail", sender: indexPath)
+    }
+    
     //삭제하는 경우
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
@@ -231,9 +210,9 @@ extension LibraryViewController: UITableViewDelegate{
     
     //이동하는 경우
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let book = books.remove(at: sourceIndexPath.row)
-        books.insert(book, at: destinationIndexPath.row)
-        libraryTableView.reloadData()
+        let book = filteredBooks.remove(at: sourceIndexPath.row)
+        filteredBooks.insert(book, at: destinationIndexPath.row)
+        //libraryTableView.reloadData()
     }
     
     

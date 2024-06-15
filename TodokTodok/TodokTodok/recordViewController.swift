@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class recordViewController: UIViewController {
 
@@ -43,6 +44,17 @@ class recordViewController: UIViewController {
     }
     
     
+    @IBAction func editingRecordTable(_ sender: UIBarButtonItem) {
+        if recordTableView.isEditing == true{
+            sender.title = "Edit"
+            recordTableView.isEditing = false
+        }
+        else{
+            sender.title = "Done"
+            recordTableView.isEditing = true
+        }
+        
+    }
     
     func manageDatabase(dict: [String: Any]?, dbaction: DbAction?){
         guard let dbFirebase = dbFirebase else {
@@ -92,6 +104,58 @@ extension recordViewController: UITableViewDelegate{
        performSegue(withIdentifier: "recordToDetail", sender: indexPath)
    }
 
+    
+    
+    
+    
+    //삭제하는 경우
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            //데베에서 삭제 해야함
+            var selectedBook = recordedBooks[indexPath.row]
+            selectedBook.memo = ""
+            
+            if selectedBook.id < 3{ //bookData에서 읽어온 것인 경우
+                recordedBooks.remove(at: indexPath.row)
+                recordTableView.reloadData()
+            }else{
+                let booksCollection = Firestore.firestore().collection("books")
+                
+                // 책 ID로 Firestore를 쿼리하여 문서 ID 찾기
+               booksCollection.whereField("id", isEqualTo: selectedBook.id).getDocuments { [weak self] (querySnapshot, error) in
+                   guard let self = self else { return }
+
+                   if let error = error {
+                       print("문서 가져오기 실패: \(error.localizedDescription)")
+                       return
+                   }
+
+                   guard let document = querySnapshot?.documents.first else {
+                       print("일치하는 문서를 찾을 수 없음")
+                       return
+                   }
+
+                   let documentID = document.documentID
+                   print(documentID)
+                   // 새로운 상태와 메모로 문서 업데이트
+                   self.dbFirebase?.saveChange(key: documentID, object: Book.toDict(book: selectedBook), action: .modify)
+               }
+                recordTableView.reloadData()
+            }
+            
+
+            
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // 셀의 높이를 일정하게 설정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100//return CGFloat(books.count)
