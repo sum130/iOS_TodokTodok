@@ -83,6 +83,8 @@ class writeMemoViewController: UIViewController {
                    }
                }
         }
+        // 창 돌아가기
+        self.navigationController?.popViewController(animated: true)
     }
 }
 

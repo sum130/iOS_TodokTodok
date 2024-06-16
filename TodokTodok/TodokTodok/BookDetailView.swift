@@ -156,8 +156,8 @@ class BookDetailViewController: UIViewController {
         guard var book = self.book, let libraryViewController = self.libraryViewController, let selectedBookIndex = self.selectedBook else {
             return
         }
-        // Remove book from libraryViewController's filteredBooks array if it exists
-        if let filteredIndex = libraryViewController.books.firstIndex(where: { $0.id == book.id }) {/////////
+        //libraryViewController's filteredBooks에서 책 지우기
+        if let filteredIndex = libraryViewController.books.firstIndex(where: { $0.id == book.id }) {
             libraryViewController.books.remove(at: filteredIndex)
             print("removeee")
         }
@@ -165,19 +165,16 @@ class BookDetailViewController: UIViewController {
         // Update book state
         book.state = newState
         
-        // Update book in libraryViewController's books array
+        // libraryViewController's books에 책 업데이트
         if selectedBookIndex < libraryViewController.books.count {
             libraryViewController.books[selectedBookIndex] = book
         }
         
         // Update Firestore document
         updateFirestoreDocument(book: book)
-        
         libraryViewController.updateFilteredBooks()
-        
-       // Reload library table view to reflect changes
        libraryViewController.libraryTableView.reloadData()
-        // Dismiss or navigate back to previous view if needed
+        // 창 돌아가기
         self.navigationController?.popViewController(animated: true)
         
     }
