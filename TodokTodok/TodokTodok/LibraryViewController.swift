@@ -172,7 +172,12 @@ class LibraryViewController: UIViewController{
         case .delete:
             if let index = books.firstIndex(where: { $0.id == book.id }) {
                 books.remove(at: index)
+                
             }
+//            // filteredBooks에서도 삭제
+//            if let index = self.filteredBooks.firstIndex(where: { $0.id == book.id }) {
+//                self.filteredBooks.remove(at: index)
+//            }
         default:
             break
         }
@@ -200,30 +205,7 @@ class LibraryViewController: UIViewController{
     }
     
     
-    func updateBookState(index: Int, newState: String) {
-            var selectedBook = filteredBooks[index]
-            selectedBook.state = newState
-            
-            // Remove the book from filteredBooks based on the state filter
-            switch filterState {
-            case "completed":
-                if selectedBook.state != "completed" {
-                    filteredBooks.remove(at: index)
-                }
-            case "reading":
-                if selectedBook.state != "reading" {
-                    filteredBooks.remove(at: index)
-                }
-            case "wanna":
-                if selectedBook.state != "wanna" {
-                    filteredBooks.remove(at: index)
-                }
-            default:
-                break
-            }
-            
-            libraryTableView.reloadData()
-        }
+    
 }
 
 extension LibraryViewController: UITableViewDelegate{
@@ -280,10 +262,10 @@ extension LibraryViewController: UITableViewDelegate{
                                self.books.remove(at: index)
                            }
                            
-                           // filteredBooks에서도 삭제
-                           if let index = self.filteredBooks.firstIndex(where: { $0.id == selectedBook.id }) {
-                               self.filteredBooks.remove(at: index)
-                           }
+//                           // filteredBooks에서도 삭제
+//                           if let index = self.filteredBooks.firstIndex(where: { $0.id == selectedBook.id }) {
+//                               self.filteredBooks.remove(at: index)
+//                           }
                            // 책이 삭제된 후, filteredBooks를 업데이트하여 새로운 필터링 상태를 반영
                            self.updateFilteredBooks()
                            self.libraryTableView.reloadData()

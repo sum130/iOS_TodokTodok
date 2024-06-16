@@ -162,11 +162,10 @@ class BookDetailViewController: UIViewController {
             libraryViewController.books[selectedBookIndex] = book
         }
         
-       // libraryViewController.books.append(book)//////
-         
-        
         // Update Firestore document
         updateFirestoreDocument(book: book)
+        
+        libraryViewController.updateFilteredBooks()
         
        // Reload library table view to reflect changes
        libraryViewController.libraryTableView.reloadData()
