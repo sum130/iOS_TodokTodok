@@ -477,10 +477,10 @@
                                         <rect key="frame" x="0.0" y="60" width="373" height="772"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Yak-k8-XM5">
-                                                <rect key="frame" x="0.0" y="0.0" width="373" height="284.33333333333331"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="373" height="390"/>
                                             </imageView>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8Qv-7k-Gec">
-                                                <rect key="frame" x="0.0" y="294.33333333333331" width="373" height="227.33333333333331"/>
+                                                <rect key="frame" x="0.0" y="400" width="373" height="312"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                 <color key="textColor" systemColor="labelColor"/>
@@ -488,8 +488,11 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dd1-I7-KYT">
-                                                <rect key="frame" x="0.0" y="531.66666666666663" width="373" height="240.33333333333337"/>
+                                                <rect key="frame" x="0.0" y="722" width="373" height="50"/>
                                                 <color key="backgroundColor" red="0.257303685" green="0.51427773909999996" blue="0.5927515337" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="aXb-ds-lxF"/>
+                                                </constraints>
                                                 <color key="tintColor" systemColor="systemBackgroundColor"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="저장"/>

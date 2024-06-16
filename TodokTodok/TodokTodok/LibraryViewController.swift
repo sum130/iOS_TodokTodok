@@ -116,67 +116,114 @@ class LibraryViewController: UIViewController{
     
     
     
+//    
+//    func manageDatabase(dict: [String: Any]?, dbaction: DbAction?){
+//            //let book = Book.fromDict(dict: dict!)
+//        guard let dbFirebase = dbFirebase else {
+//                print("DbFirebase 객체가 초기화되지 않았습니다.")
+//                return
+//            }
+//        
+//        guard let dict = dict, let book = Book.fromDict(dict: dict) else {
+//                print("Failed to parse book from dict: \(String(describing: dict))")
+//                return
+//        }
+//        
+//        
+//        switch dbaction {
+//            case .add:
+//                books.append(book)
+//            case .modify:
+//                if let index = books.firstIndex(where: { $0.id == book.id }) {
+//                    books[index] = book
+//                }
+//            case .delete:
+//                if let index = books.firstIndex(where: { $0.id == book.id }) {
+//                    books.remove(at: index)
+//                }
+//            default:
+//                break
+//            }
+//        
+//        // 책의 상태가 변경될 때 filteredBooks를 다시 설정합니다.
+//        updateFilteredBooks()
+//        libraryTableView.reloadData() // tableView의 내용을 업데이트한다
+//         
+//      if let indexPath = libraryTableView.indexPathForSelectedRow{
+//        // 만약 선택된 row가 있다면 그 책의 discription 내용을 업데이트 한다
+//        nameLabel.text = books[indexPath.row].description
+//      }
+//    }
+
     
-    func manageDatabase(dict: [String: Any]?, dbaction: DbAction?){
-            //let book = Book.fromDict(dict: dict!)
-        guard let dbFirebase = dbFirebase else {
-                print("DbFirebase 객체가 초기화되지 않았습니다.")
-                return
-            }
-        if(dbFirebase != nil){
-            print("있음")
-        }
-        
+    func manageDatabase(dict: [String: Any]?, dbaction: DbAction?) {
         guard let dict = dict, let book = Book.fromDict(dict: dict) else {
-                    print("Failed to parse book from dict: \(String(describing: dict))")
-                    return
+            print("Failed to parse book from dict: \(String(describing: dict))")
+            return
         }
-        
         
         switch dbaction {
-            case .add:
-                books.append(book)
-            case .modify:
-                if let index = books.firstIndex(where: { $0.id == book.id }) {
-                    books[index] = book
-                }
-            case .delete:
-                if let index = books.firstIndex(where: { $0.id == book.id }) {
-                    books.remove(at: index)
-                }
-            default:
-                break
+        case .add:
+            books.append(book)
+        case .modify:
+            if let index = books.firstIndex(where: { $0.id == book.id }) {
+                books[index] = book
             }
+        case .delete:
+            if let index = books.firstIndex(where: { $0.id == book.id }) {
+                books.remove(at: index)
+            }
+        default:
+            break
+        }
         
+        updateFilteredBooks()  // 변경된 상태를 필터에 반영
+        libraryTableView.reloadData()
         
-        
-        
-        // 책의 상태가 변경될 때 filteredBooks를 다시 설정합니다.
-        updateFilteredBooks()
-        
-        libraryTableView.reloadData() // tableView의 내용을 업데이트한다
-        print("success")
-         
-      if let indexPath = libraryTableView.indexPathForSelectedRow{
-        // 만약 선택된 row가 있다면 그 책의 discription 내용을 업데이트 한다
-        nameLabel.text = books[indexPath.row].description
-      }
+        if let indexPath = libraryTableView.indexPathForSelectedRow {
+            nameLabel.text = books[indexPath.row].description
+        }
     }
+    
     
     func updateFilteredBooks() {
         switch filterState {
         case "completed":
-            filteredBooks = books.filter { $0.state == "completed" }
+            filteredBooks = filteredBooks.filter { $0.state == "completed" }
         case "reading":
-            filteredBooks = books.filter { $0.state == "reading" }
+            filteredBooks = filteredBooks.filter { $0.state == "reading" }
         case "wanna":
-            filteredBooks = books.filter { $0.state == "wanna" }
+            filteredBooks = filteredBooks.filter { $0.state == "wanna" }
         default:
-            filteredBooks = books // 기본적으로 모든 책을 보여줍니다.
+            filteredBooks = books
         }
     }
     
     
+    func updateBookState(index: Int, newState: String) {
+            var selectedBook = filteredBooks[index]
+            selectedBook.state = newState
+            
+            // Remove the book from filteredBooks based on the state filter
+            switch filterState {
+            case "completed":
+                if selectedBook.state != "completed" {
+                    filteredBooks.remove(at: index)
+                }
+            case "reading":
+                if selectedBook.state != "reading" {
+                    filteredBooks.remove(at: index)
+                }
+            case "wanna":
+                if selectedBook.state != "wanna" {
+                    filteredBooks.remove(at: index)
+                }
+            default:
+                break
+            }
+            
+            libraryTableView.reloadData()
+        }
 }
 
 extension LibraryViewController: UITableViewDelegate{
@@ -237,16 +284,13 @@ extension LibraryViewController: UITableViewDelegate{
                            if let index = self.filteredBooks.firstIndex(where: { $0.id == selectedBook.id }) {
                                self.filteredBooks.remove(at: index)
                            }
-                           
+                           // 책이 삭제된 후, filteredBooks를 업데이트하여 새로운 필터링 상태를 반영
+                           self.updateFilteredBooks()
                            self.libraryTableView.reloadData()
                        }
                    }
                }
-                //libraryTableView.reloadData()
             }
-            
-
-            
         }
     }
     
@@ -256,13 +300,12 @@ extension LibraryViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let book = filteredBooks.remove(at: sourceIndexPath.row)
         filteredBooks.insert(book, at: destinationIndexPath.row)
-        //libraryTableView.reloadData()
     }
     
     
     // 셀의 높이를 일정하게 설정
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 100//return CGFloat(books.count)
+            return 100
         }
 }
 
@@ -271,12 +314,13 @@ extension LibraryViewController: UITableViewDataSource{
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(filterState=="completed"||filterState=="reading"||filterState=="wanna"){
-            return filteredBooks.count
-        }
-        else{
-            return books.count
-        }
+//        if(filterState=="completed"||filterState=="reading"||filterState=="wanna"){
+//            return filteredBooks.count
+//        }
+//        else{
+//            return books.count
+//        }
+        return filteredBooks.count
     }
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -284,15 +328,15 @@ extension LibraryViewController: UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell")!//pool에 저장하여 재사용
         //let cell = UITableViewCell()
         
-//        // 필터링된 배열에서 해당 인덱스의 책을 가져옴
-        let book: Book
-        if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
-            print(filteredBooks)
-            book = filteredBooks[indexPath.row]
-        } else {
-            book = books[indexPath.row]
-        }
-
+////        // 필터링된 배열에서 해당 인덱스의 책을 가져옴
+//        let book: Book
+//        if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
+//            print(filteredBooks)
+//            book = filteredBooks[indexPath.row]
+//        } else {
+//            book = books[indexPath.row]
+//        }
+        let book = filteredBooks[indexPath.row]
         
     // 태그를 사용하여 서브뷰 식별
         let tagImageView = 100
