@@ -360,7 +360,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XPc-Be-rNX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1237" y="1962"/>
+            <point key="canvasLocation" x="1132" y="1744"/>
         </scene>
         <!--Write Memo View Controller-->
         <scene sceneID="B41-S0-Whu">
@@ -437,7 +437,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vGh-p9-8tB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2318" y="1962"/>
+            <point key="canvasLocation" x="2413" y="1744"/>
         </scene>
         <!--서재-->
         <scene sceneID="aln-RM-eFr">

@@ -153,30 +153,43 @@ class BookDetailViewController: UIViewController {
 
     
     func updateBookState(to newState: String) {
-        guard var book = self.book, let libraryViewController = self.libraryViewController, let selectedBookIndex = self.selectedBook else {
+        guard var book = self.book else {
             return
         }
-        //libraryViewController's filteredBooks에서 책 지우기
-        if let filteredIndex = libraryViewController.books.firstIndex(where: { $0.id == book.id }) {
-            libraryViewController.books.remove(at: filteredIndex)
-            print("removeee")
+        if let libraryViewController = self.libraryViewController, let selectedBookIndex = self.selectedBook{
+            //libraryViewController's filteredBooks에서 책 지우기
+            if let filteredIndex = libraryViewController.books.firstIndex(where: { $0.id == book.id }) {
+                libraryViewController.books.remove(at: filteredIndex)
+                print("removeee")
+            }
+            // libraryViewController's books에 책 업데이트
+            if selectedBookIndex < libraryViewController.books.count {
+                libraryViewController.books[selectedBookIndex] = book
+            }
+            libraryViewController.updateFilteredBooks()
+           libraryViewController.libraryTableView.reloadData()
         }
         
         // Update book state
         book.state = newState
-        
-        // libraryViewController's books에 책 업데이트
-        if selectedBookIndex < libraryViewController.books.count {
-            libraryViewController.books[selectedBookIndex] = book
-        }
-        
         // Update Firestore document
         updateFirestoreDocument(book: book)
-        libraryViewController.updateFilteredBooks()
-       libraryViewController.libraryTableView.reloadData()
-        // 창 돌아가기
-        self.navigationController?.popViewController(animated: true)
+        var stateStr:String?
+        switch book.state {
+        case "completed":
+            stateStr = "읽기 완료"
+        case "reading":
+            stateStr = "읽는 중"
+        case "wanna":
+            stateStr = "읽고 싶음"
+        default:
+            stateStr = "읽기 상태 선택"
+        }
+        contentLabel.text = "<저자>\n" + book.writer + "\n\n<설명>\n" + book.description + "\n\n<읽기 상태>\n"//
+        contentLabel.text! += stateStr ?? ""
         
+        self.navigationController?.popViewController(animated: true)
+        // 창 돌아가기
     }
     
     func updateFirestoreDocument(book: Book) {
