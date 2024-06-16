@@ -51,11 +51,10 @@ extension BookSearchViewController: UITableViewDelegate{
         print(books[indexPath.row])
     }
     
-    
-    // 셀의 높이를 일정하게 설정
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 100
-        }
+// 셀의 높이를 일정하게 설정
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
 }
 
 
@@ -102,7 +101,7 @@ extension BookSearchViewController: UITableViewDataSource{
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
                     nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 5),
                     writerLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 2)
-                ])
+        ])
         
         return cell
     }
@@ -124,18 +123,11 @@ extension BookSearchViewController{
         let QueryText = "&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&js&Version=20131101"
         urlStr += Query
         urlStr += QueryText
-        //urlStr = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbsm39041712001 &Query=aladdin&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&output=xml&Version=20070901"
-        //print(urlStr)
-        
         
         let request = URLRequest(url: URL(string: urlStr)!) // 디폴트가 GET방식이다
         let session = URLSession(configuration: .default)
         let dataTask = session.dataTask(with: request){ (data, response, error) in
             guard let jsonData = data else{ print(error!); return }
-            
-//            if let jsonStr = String(data:jsonData, encoding: .utf8){
-//                print("!!!!\n"+jsonStr)
-//            }
             
             guard let xmlData = data else {
                             print(error ?? "Unknown error")
@@ -144,14 +136,6 @@ extension BookSearchViewController{
             let parser = XMLParser(data: xmlData)
             parser.delegate = self
             parser.parse()
-            
-            //let (infoStr, imageData) = self.makeUpBookInfo(jsonData: jsonData)
-            //print(infoStr)
-            
-            
-            DispatchQueue.main.async {
-                // 업데이트할 UI 코드 작성
-            }
             
         }
         dataTask.resume()
@@ -164,24 +148,21 @@ extension BookSearchViewController: XMLParserDelegate{
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         
-            if elementName == "item" {
-                self.currentBook = nil
-                currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "", memo: "")
-                if let itemId = attributeDict["itemId"], let id = Int(itemId) {
-                    currentBook?.id = id
-                }
+        if elementName == "item" {
+            self.currentBook = nil
+            currentBook = Book(id: 0, name: "", writer: "", description: "", imageName: "", state: "", memo: "")
+            if let itemId = attributeDict["itemId"], let id = Int(itemId) {
+                currentBook?.id = id
             }
-        else if elementName == "title" || elementName == "author" || elementName == "description" || elementName == "cover" {
-                    currentElement = elementName
-                    foundCharacters = ""
-                }
-    }
-    
-    
-    
-        func parser(_ parser: XMLParser, foundCharacters string: String) {
-            foundCharacters += string
         }
+        else if elementName == "title" || elementName == "author" || elementName == "description" || elementName == "cover" {
+            currentElement = elementName
+            foundCharacters = ""
+        }
+    }
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        foundCharacters += string
+    }
         
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
             switch elementName {
@@ -204,11 +185,8 @@ extension BookSearchViewController: XMLParserDelegate{
                 break
             }
 
-////
-//                books.append(currentBook)
-//                self.currentBook = nil
-                currentElement = nil
-                foundCharacters = ""
+            currentElement = nil
+            foundCharacters = ""
         }
     
         func parserDidEndDocument(_ parser: XMLParser) {
@@ -245,10 +223,10 @@ extension UIImageView {//책이미지 다운받기
                 return
             }
             
-            // Create an image from the data
+            // 데이터로부터 이미지 만들기
             let image = UIImage(data: imageData)
             
-            // Update the UI on the main thread
+            // 메인스레드 UI 업데이트
             DispatchQueue.main.async {
                 self.image = image
             }

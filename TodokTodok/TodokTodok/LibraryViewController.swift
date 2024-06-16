@@ -61,11 +61,7 @@ class LibraryViewController: UIViewController{
         filterState = "total"
         // 테이블 뷰에 셀 등록
         libraryTableView.register(UITableViewCell.self, forCellReuseIdentifier: "bookCell")
-        
-        
         libraryTableView.reloadData()  // 테이블 뷰 초기화
-        
-        
     }
     
     
@@ -113,49 +109,6 @@ class LibraryViewController: UIViewController{
    }
     
     
-    
-    
-    
-//    
-//    func manageDatabase(dict: [String: Any]?, dbaction: DbAction?){
-//            //let book = Book.fromDict(dict: dict!)
-//        guard let dbFirebase = dbFirebase else {
-//                print("DbFirebase 객체가 초기화되지 않았습니다.")
-//                return
-//            }
-//        
-//        guard let dict = dict, let book = Book.fromDict(dict: dict) else {
-//                print("Failed to parse book from dict: \(String(describing: dict))")
-//                return
-//        }
-//        
-//        
-//        switch dbaction {
-//            case .add:
-//                books.append(book)
-//            case .modify:
-//                if let index = books.firstIndex(where: { $0.id == book.id }) {
-//                    books[index] = book
-//                }
-//            case .delete:
-//                if let index = books.firstIndex(where: { $0.id == book.id }) {
-//                    books.remove(at: index)
-//                }
-//            default:
-//                break
-//            }
-//        
-//        // 책의 상태가 변경될 때 filteredBooks를 다시 설정합니다.
-//        updateFilteredBooks()
-//        libraryTableView.reloadData() // tableView의 내용을 업데이트한다
-//         
-//      if let indexPath = libraryTableView.indexPathForSelectedRow{
-//        // 만약 선택된 row가 있다면 그 책의 discription 내용을 업데이트 한다
-//        nameLabel.text = books[indexPath.row].description
-//      }
-//    }
-
-    
     func manageDatabase(dict: [String: Any]?, dbaction: DbAction?) {
         guard let dict = dict, let book = Book.fromDict(dict: dict) else {
             print("Failed to parse book from dict: \(String(describing: dict))")
@@ -174,10 +127,6 @@ class LibraryViewController: UIViewController{
                 books.remove(at: index)
                 
             }
-//            // filteredBooks에서도 삭제
-//            if let index = self.filteredBooks.firstIndex(where: { $0.id == book.id }) {
-//                self.filteredBooks.remove(at: index)
-//            }
         default:
             break
         }
@@ -203,9 +152,6 @@ class LibraryViewController: UIViewController{
             filteredBooks = books
         }
     }
-    
-    
-    
 }
 
 extension LibraryViewController: UITableViewDelegate{
@@ -248,8 +194,6 @@ extension LibraryViewController: UITableViewDelegate{
 
                    let documentID = document.documentID
                    print(documentID)
-                   // 새로운 상태와 메모로 문서 업데이트
-                   //self.dbFirebase?.saveChange(key: documentID, object: Book.toDict(book: selectedBook), action: .modify)
                    // Firestore에서 문서 삭제
                    booksCollection.document(documentID).delete { error in
                        if let error = error {
@@ -261,11 +205,6 @@ extension LibraryViewController: UITableViewDelegate{
                            if let index = self.books.firstIndex(where: { $0.id == selectedBook.id }) {
                                self.books.remove(at: index)
                            }
-                           
-//                           // filteredBooks에서도 삭제
-//                           if let index = self.filteredBooks.firstIndex(where: { $0.id == selectedBook.id }) {
-//                               self.filteredBooks.remove(at: index)
-//                           }
                            // 책이 삭제된 후, filteredBooks를 업데이트하여 새로운 필터링 상태를 반영
                            self.updateFilteredBooks()
                            self.libraryTableView.reloadData()
@@ -277,18 +216,16 @@ extension LibraryViewController: UITableViewDelegate{
     }
     
     
-    
     //이동하는 경우
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let book = filteredBooks.remove(at: sourceIndexPath.row)
         filteredBooks.insert(book, at: destinationIndexPath.row)
     }
     
-    
     // 셀의 높이를 일정하게 설정
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 100
-        }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
 }
 
 extension LibraryViewController: UITableViewDataSource{
@@ -296,28 +233,12 @@ extension LibraryViewController: UITableViewDataSource{
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if(filterState=="completed"||filterState=="reading"||filterState=="wanna"){
-//            return filteredBooks.count
-//        }
-//        else{
-//            return books.count
-//        }
         return filteredBooks.count
     }
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell")!//pool에 저장하여 재사용
-        //let cell = UITableViewCell()
-        
-////        // 필터링된 배열에서 해당 인덱스의 책을 가져옴
-//        let book: Book
-//        if filterState == "completed" || filterState == "reading" || filterState == "wanna" {
-//            print(filteredBooks)
-//            book = filteredBooks[indexPath.row]
-//        } else {
-//            book = books[indexPath.row]
-//        }
         let book = filteredBooks[indexPath.row]
         
     // 태그를 사용하여 서브뷰 식별
@@ -364,9 +285,6 @@ extension LibraryViewController: UITableViewDataSource{
         descriptionLabel.font = UIFont.systemFont(ofSize: 12) // 원하는 크기로 설정
         descriptionLabel.text = book.writer
         
-    
-        
-        
         // 기존의 UIStackView 제거
         for view in cell.contentView.subviews where view is UIStackView {
             view.removeFromSuperview()
@@ -385,11 +303,10 @@ extension LibraryViewController: UITableViewDataSource{
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
                     nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3),
                     descriptionLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3)
-                ])
+        ])
         
         return cell
         }
-    
     }
 
 extension LibraryViewController {
@@ -411,7 +328,7 @@ extension LibraryViewController {
 }
 
 
-// UIImageView extension을 추가하여 URL에서 이미지를 로드하는 메서드를 정의합니다.
+// UIImageView extension을 추가하여 URL에서 이미지를 로드하는 메서드를 정의
 extension UIImageView {
     func loadImage(from urlString: String?, placeholder: UIImage?) {
         guard let urlString = urlString, let url = URL(string: urlString) else {

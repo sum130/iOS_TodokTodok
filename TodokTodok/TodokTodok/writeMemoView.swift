@@ -74,7 +74,6 @@ class writeMemoViewController: UIViewController {
             
             print("Document ID:", documentId)
             print("Document Data:", dict)
-     ////
                     
             booksCollection.document(documentId).setData(dict) { error in
                    if let error = error {

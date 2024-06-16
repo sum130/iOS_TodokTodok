@@ -27,8 +27,6 @@ class recordViewController: UIViewController {
         recordTableView.dataSource = self
         recordTableView.delegate = self
         
-        //recordedBooks = recordedBooks.filter { $0.memo != "" }
-        
         dbFirebase = DbFirebase(parentNotification: manageDatabase)
         if dbFirebase == nil {
             print("DbFirebase 객체 초기화 실패")
@@ -99,9 +97,6 @@ extension recordViewController: UITableViewDelegate{
    }
 
     
-    
-    
-    
     //삭제하는 경우
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
@@ -146,18 +141,9 @@ extension recordViewController: UITableViewDelegate{
         recordedBooks.insert(book, at: destinationIndexPath.row)
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
     // 셀의 높이를 일정하게 설정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100//return CGFloat(books.count)
+        return 100
     }
 }
 
@@ -179,62 +165,55 @@ extension recordViewController: UITableViewDataSource{
         book = recordedBooks[indexPath.row]
         print(book)
         
-        
         // 태그를 사용하여 서브뷰 식별
-            let tagImageView = 100
-            let tagNameLabel = 101
-            let tagDescriptionLabel = 102
+        let tagImageView = 100
+        let tagNameLabel = 101
+        let tagDescriptionLabel = 102
         // UIImageView 재사용 또는 생성
-            var imageView: UIImageView
-            if let existingImageView = cell.contentView.viewWithTag(tagImageView) as? UIImageView {
-                imageView = existingImageView
-            } else {
-                imageView = UIImageView()
-                imageView.tag = tagImageView
-                cell.contentView.addSubview(imageView)
-            }
-            imageView.loadImage(from: book.imageName, placeholder: basicImage)
-            
-            // UILabel 재사용 또는 생성 (Name Label)
-            var nameLabel: UILabel
-            if let existingNameLabel = cell.contentView.viewWithTag(tagNameLabel) as? UILabel {
-                nameLabel = existingNameLabel
-            } else {
-                nameLabel = UILabel()
-                nameLabel.tag = tagNameLabel
-                nameLabel.numberOfLines = 0
-                nameLabel.textColor = .black
-                nameLabel.font = UIFont.systemFont(ofSize: 14) // 원하는 크기로 설정
-                cell.contentView.addSubview(nameLabel)
-            }
-            nameLabel.text = book.name
-            
-            // UILabel 재사용 또는 생성 (Description Label)
-            var descriptionLabel: UILabel
-            if let existingDescriptionLabel = cell.contentView.viewWithTag(tagDescriptionLabel) as? UILabel {
-                descriptionLabel = existingDescriptionLabel
-            } else {
-                descriptionLabel = UILabel()
-                descriptionLabel.tag = tagDescriptionLabel
-                descriptionLabel.numberOfLines = 0
-                cell.contentView.addSubview(descriptionLabel)
-            }
-            descriptionLabel.textColor = .gray
-            descriptionLabel.textAlignment = .right
-            descriptionLabel.font = UIFont.systemFont(ofSize: 12) // 원하는 크기로 설정
-            descriptionLabel.text = book.memo
-            
+        var imageView: UIImageView
+        if let existingImageView = cell.contentView.viewWithTag(tagImageView) as? UIImageView {
+            imageView = existingImageView
+        } else {
+            imageView = UIImageView()
+            imageView.tag = tagImageView
+            cell.contentView.addSubview(imageView)
+        }
+        imageView.loadImage(from: book.imageName, placeholder: basicImage)
         
-            
-            
-            // 기존의 UIStackView 제거
-            for view in cell.contentView.subviews where view is UIStackView {
-                view.removeFromSuperview()
-            }
-            
+        // UILabel 재사용 또는 생성 (Name Label)
+        var nameLabel: UILabel
+        if let existingNameLabel = cell.contentView.viewWithTag(tagNameLabel) as? UILabel {
+            nameLabel = existingNameLabel
+        } else {
+            nameLabel = UILabel()
+            nameLabel.tag = tagNameLabel
+            nameLabel.numberOfLines = 0
+            nameLabel.textColor = .black
+            nameLabel.font = UIFont.systemFont(ofSize: 14) // 원하는 크기로 설정
+            cell.contentView.addSubview(nameLabel)
+        }
+        nameLabel.text = book.name
         
-      
+        // UILabel 재사용 또는 생성 (Description Label)
+        var descriptionLabel: UILabel
+        if let existingDescriptionLabel = cell.contentView.viewWithTag(tagDescriptionLabel) as? UILabel {
+            descriptionLabel = existingDescriptionLabel
+        } else {
+            descriptionLabel = UILabel()
+            descriptionLabel.tag = tagDescriptionLabel
+            descriptionLabel.numberOfLines = 0
+            cell.contentView.addSubview(descriptionLabel)
+        }
+        descriptionLabel.textColor = .gray
+        descriptionLabel.textAlignment = .right
+        descriptionLabel.font = UIFont.systemFont(ofSize: 12) // 원하는 크기로 설정
+        descriptionLabel.text = book.memo
         
+        // 기존의 UIStackView 제거
+        for view in cell.contentView.subviews where view is UIStackView {
+            view.removeFromSuperview()
+        }
+            
         
         var outer = UIStackView(arrangedSubviews: [imageView,nameLabel,descriptionLabel])
         outer.spacing = 10
@@ -248,11 +227,10 @@ extension recordViewController: UITableViewDataSource{
                     outer.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
                     nameLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3),
                     descriptionLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 3)
-                ])
+        ])
         
         return cell
     }
-    
 }
 
 

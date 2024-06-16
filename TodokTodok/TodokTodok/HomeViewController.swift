@@ -17,6 +17,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
         
         
         BookSearchBar.delegate = self
+        BookSearchBar.placeholder = "책을 검색하세요."
         
     }
     
