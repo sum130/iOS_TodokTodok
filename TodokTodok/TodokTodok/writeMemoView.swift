@@ -31,7 +31,7 @@ class writeMemoViewController: UIViewController {
         if var book = book {
             titleLabel.text = book.name.isEmpty ? "No Title" : book.name
             coverImageView.loadImage(from: book.imageName, placeholder: basicImage)
-            memoTextView.text = book.memo.isEmpty ? "No Memo" : book.memo
+            memoTextView.text = book.memo.isEmpty ? "기록없음" : book.memo
             
         }
         if(libraryViewController?.dbFirebase==nil){

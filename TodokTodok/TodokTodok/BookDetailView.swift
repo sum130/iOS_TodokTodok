@@ -33,11 +33,11 @@ class BookDetailViewController: UIViewController {
             titleLabel.text = book.name
             //coverImageView.image = UIImage(named: book.imageName)
             coverImageView.loadImage(from: book.imageName, placeholder: basicImage)
-            contentLabel.text = "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
+            contentLabel.text = "<저자>\n" + book.writer + "\n\n<설명>\n" + book.description + "\n\n<읽기 상태>\n" + book.state
             if(book.memo==""){
-                memoLabel.text = "Memo: 기록 없음"
+                memoLabel.text = "<나의 기록>\n    없음."
             }else{
-                memoLabel.text = "Memo: " + book.memo
+                memoLabel.text = "<나의 기록>\n" + book.memo
             }
             
             // 상태 버튼의 초기 선택 상태 설정
@@ -78,7 +78,7 @@ class BookDetailViewController: UIViewController {
 
             memoVC.saveMemo = { [weak self] newMemo in
                 self?.book?.memo = newMemo
-                self?.memoLabel.text = "\nMemo: " + newMemo
+                self?.memoLabel.text = "<나의 기록>\n" + newMemo
                 
                 // libraryViewController에도 변경 사항을 반영
                 if let index = self?.selectedBook {
@@ -110,11 +110,11 @@ class BookDetailViewController: UIViewController {
         if let book = book {
             switch book.state {
             case "completed":
-                defaultStateTitle = "completed"
+                defaultStateTitle = "읽기 완료"
             case "reading":
-                defaultStateTitle = "reading"
+                defaultStateTitle = "읽는 중"
             case "wanna":
-                defaultStateTitle = "wanna"
+                defaultStateTitle = "읽고 싶음"
             default:
                 defaultStateTitle = "읽기 상태 선택"
             }
@@ -129,7 +129,7 @@ class BookDetailViewController: UIViewController {
         let wannaAction = UIAction(title: "읽고 싶음", handler: { [weak self] _ in
             self?.updateBookState(to: "wanna")
         })
-        let noAction = UIAction(title: "상태 선택", handler: { [weak self] _ in
+        let noAction = UIAction(title: "읽기 상태 선택", handler: { [weak self] _ in
             self?.updateBookState(to: "")
         })
         
@@ -207,75 +207,7 @@ class BookDetailViewController: UIViewController {
             }
         }
     }
-    
-    
-//    func updateBookState(to newState: String) {
-//        print("updateBookState")
-//        if var book = book {
-//            book.state = newState
-//            
-//            // 변경된 상태를 contentLabel에 업데이트
-//            contentLabel.text = "\nstate: " + book.state + "author: " + book.writer + "\ndescription: " + book.description + "\nstate: " + book.state
-//            if(book.memo==""){
-//                memoLabel.text = "기록 없음"
-//            }else{
-//                memoLabel.text = "\nMemo: " + book.memo
-//            }
-//            
-//            
-//            // libraryViewController에도 변경 사항을 반영
-//            if let index = selectedBook, let libraryVC = libraryViewController {
-//                if index < libraryVC.books.count {
-//                    libraryVC.books[index] = book
-//                }
-//                if index < libraryVC.filteredBooks.count {
-//                    libraryVC.books[index] = book
-//                }
-//                //libraryVC.libraryTableView.reloadData()
-//            }
-//            
-//            
-//            // Firestore에 업데이트된 상태 저장
-//            let bookId = book.id
-//            let booksCollection = Firestore.firestore().collection("books")
-//            
-//            // book.id로 문서를 조회
-//            
-//            booksCollection.whereField("id", isEqualTo: bookId).getDocuments { [self] (querySnapshot, error) in
-//                if let error = error {
-//                    print("Failed to fetch documents: \(error.localizedDescription)")
-//                    return
-//                }
-//                
-//                guard let documents = querySnapshot?.documents, !documents.isEmpty else {
-//                    print("No matching documents found, adding new document")
-//                    addBookToFirestore(book: book)
-//                    return
-//                }
-//    
-//                // 첫 번째 문서 가져오기
-//                let document = documents[0]
-//                let documentId = document.documentID
-//                let dict = Book.toDict(book: book)
-////                let operation: DbAction = document.exists ? .modify : .add
-//                
-//                print("Document ID:", documentId)
-//                print("Document Data:", dict)
-//                
-//                booksCollection.document(documentId).setData(dict) { error in
-//                       if let error = error {
-//                           print("Error updating document: \(error.localizedDescription)")
-//                       } else {
-//                           print("Document successfully updated")
-//                       }
-//                   }
-//                
-//                // 상태 버튼 메뉴 업데이트
-//                setupStateButtonMenu()
-//                stateBtn.setTitle(newState.capitalized, for: .normal)
-//            }
-//            //libraryViewController?.libraryTableView.reloadData()
-//        }
+
         
         
         func addBookToFirestore(book: Book) {

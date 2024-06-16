@@ -46,7 +46,7 @@ extension BookSearchViewController: UITableViewDelegate{
     // 특정 row를 클릭하면 이 함수가 호출된다
     func tableView(_ tableView: UITableView, didSelectRowAt
                    indexPath: IndexPath) {
-        resultLabel.text = "   \(indexPath.row)th row was selected"
+        resultLabel.text = "   \(books[indexPath.row].name)을 선택하였습니다."
         performSegue(withIdentifier: "SearchToDetail", sender: indexPath)
         print(books[indexPath.row])
     }
@@ -77,11 +77,14 @@ extension BookSearchViewController: UITableViewDataSource{
         let nameLabel = UILabel()
         nameLabel.numberOfLines = 0
         nameLabel.text = book.name
+        nameLabel.font = UIFont.systemFont(ofSize: 14) // 원하는 크기로 설정
         
         let writerLabel = UILabel()
         writerLabel.numberOfLines = 0
         writerLabel.text = book.writer
         writerLabel.textColor = .gray
+        writerLabel.textAlignment = .right
+        writerLabel.font = UIFont.systemFont(ofSize: 12) // 원하는 크기로 설정
         
         let imageView = UIImageView()
         imageView.loadImage(from: book.imageName)

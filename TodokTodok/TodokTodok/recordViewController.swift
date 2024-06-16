@@ -204,6 +204,7 @@ extension recordViewController: UITableViewDataSource{
                 nameLabel.tag = tagNameLabel
                 nameLabel.numberOfLines = 0
                 nameLabel.textColor = .black
+                nameLabel.font = UIFont.systemFont(ofSize: 14) // 원하는 크기로 설정
                 cell.contentView.addSubview(nameLabel)
             }
             nameLabel.text = book.name
@@ -218,7 +219,10 @@ extension recordViewController: UITableViewDataSource{
                 descriptionLabel.numberOfLines = 0
                 cell.contentView.addSubview(descriptionLabel)
             }
-            descriptionLabel.text = book.writer
+            descriptionLabel.textColor = .gray
+            descriptionLabel.textAlignment = .right
+            descriptionLabel.font = UIFont.systemFont(ofSize: 12) // 원하는 크기로 설정
+            descriptionLabel.text = book.memo
             
         
             
